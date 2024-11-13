@@ -1,6 +1,6 @@
-// controllers/fetchStockAccountsController.js
-
-const connectDB = require('../config/db');
+const { Shareholder } = require('../models'); // Adjust model import based on your project structure
+const winston = require('winston'); // For logging errors
+const { Op } = require('sequelize'); // Sequelize operators
 
 const fetchStockAccounts = async (req, res) => {
     const { mail, mobile, register_code } = req.body;
@@ -10,20 +10,34 @@ const fetchStockAccounts = async (req, res) => {
     }
 
     try {
-        const pool = await connectDB();
-        const result = await pool.request()
-            .input('mail', sql.VarChar, mail)
-            .input('mobile', sql.VarChar, mobile)
-            .input('register_code', sql.VarChar, register_code)
-            .query(`
-                SELECT account_number, hlast_name, hfirst_name, hmname 
-                FROM T_shareholder 
-                WHERE mail = @mail AND mobile = @mobile AND register_code = @register_code
-            `);
+        // Fetch shareholder information using Sequelize ORM
+        const shareholders = await Shareholder.findAll({
+            where: {
+                mail: mail,
+                mobile: mobile,
+                register_code: register_code
+            }
+        });
 
-        return res.json({ shareholders: result.recordset });
+        if (shareholders.length === 0) {
+            return res.status(404).json({ error: 'No stock accounts found for the given parameters' });
+        }
+
+        // Map the response to match the required format
+        const data = shareholders.map(shareholder => ({
+            account_number: shareholder.account_number,
+            hlast_name: shareholder.hlast_name,
+            hfirst_name: shareholder.hfirst_name,
+            hmname: shareholder.hmname
+        }));
+
+        return res.json({ shareholders: data });
     } catch (error) {
-        console.error('Error in fetchStockAccounts:', error);
+        // Log the error with Winston for consistency
+        winston.error(`Error in fetchStockAccountsController for mail: ${mail}, mobile: ${mobile}, register_code: ${register_code} - ${error.message}`, {
+            stack: error.stack,
+            route: 'fetchStockAccounts'
+        });
         return res.status(500).json({ error: 'Internal Server Error' });
     }
 };

@@ -1,0 +1,5 @@
+2024-11-13T10:22:25.083Z [INFO]: Server is running on port 3000
+2024-11-13T10:23:12.806Z [INFO]: Received GET request for /
+2024-11-13T10:23:12.810Z [WARN]: Unauthorized access attempt on /
+2024-11-13T10:23:13.360Z [INFO]: Received GET request for /favicon.ico
+2024-11-13T10:23:13.363Z [WARN]: Unauthorized access attempt on /favicon.ico

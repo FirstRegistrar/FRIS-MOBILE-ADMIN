@@ -1,25 +1,30 @@
 // controllers/verifyEmailController.js
 
-const connectDB = require('../config/db');
+const { T_shareholder } = require('../models'); // Import Sequelize models
 const generateCode = require('../utils/codeGenerator');
 const sendEmail = require('../utils/emailSender');
+const winston = require('winston'); // Import winston for logging
 
 const verifyEmail = async (req, res) => {
     const { mail } = req.body;
 
+    // Validate input
     if (!mail) {
         return res.status(400).json({ error: 'Email is required' });
     }
 
     try {
-        const pool = await connectDB();
-        const result = await pool.request()
-            .input('mail', sql.VarChar, mail)
-            .query('SELECT mobile FROM T_shareholder WHERE mail = @mail');
+        // Fetch mobile number associated with the provided email
+        const shareholder = await T_shareholder.findOne({
+            where: { mail: mail },
+            attributes: ['mobile'] // Only fetch the mobile number
+        });
 
-        if (result.recordset.length > 0) {
-            const mobile = result.recordset[0].mobile;
-            const code = generateCode();
+        if (shareholder) {
+            const mobile = shareholder.mobile;
+            const code = generateCode();  // Generate verification code
+
+            // Send email with the generated code
             const mailSent = await sendEmail(mail, code);
 
             if (mailSent) {
@@ -31,7 +36,12 @@ const verifyEmail = async (req, res) => {
             return res.json({ exists: false, message: 'Email not found' });
         }
     } catch (error) {
-        console.error('Error in verifyEmail:', error);
+        // Logging error with Winston
+        winston.error(`Error in verifyEmailController for mail: ${mail} - ${error.message}`, {
+            stack: error.stack,
+            route: 'verifyEmail'
+        });
+
         return res.status(500).json({ error: 'Internal Server Error' });
     }
 };

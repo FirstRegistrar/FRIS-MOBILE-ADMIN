@@ -1,6 +1,5 @@
-// controllers/fetchAccountsController.js
-
-const connectDB = require('../config/db');
+const { TShareholder, CompanyList } = require('../models'); // Adjust model import based on your project structure
+const winston = require('winston');
 
 const fetchAccounts = async (req, res) => {
     const { mail, mobile, type } = req.body;
@@ -10,43 +9,36 @@ const fetchAccounts = async (req, res) => {
     }
 
     try {
-        const pool = await connectDB();
-        const result = await pool.request()
-            .input('mail', sql.VarChar, mail)
-            .input('mobile', sql.VarChar, mobile)
-            .query('SELECT register_code FROM T_shareholder WHERE mail = @mail OR mobile = @mobile');
+        // Query using Sequelize ORM
+        const shareholders = await TShareholder.findAll({
+            where: {
+                [Op.or]: [{ mail }, { mobile }]
+            },
+            include: [
+                {
+                    model: CompanyList,
+                    where: {
+                        [Op.or]: [{ register_code: sequelize.col('TShareholder.register_code') }]
+                    },
+                    required: true // INNER JOIN instead of LEFT JOIN
+                }
+            ],
+            distinct: true, // Avoid duplicates
+            attributes: ['register_code', 'company_list.prc_name'] // Only select the necessary fields
+        });
 
-        const shareholders = result.recordset;
-        const response = [];
-        const seenRegCodes = new Set();
-
-        for (const shareholder of shareholders) {
-            const register_code = shareholder.register_code;
-
-            if (seenRegCodes.has(register_code)) continue;
-            seenRegCodes.add(register_code);
-
-            let companyQuery = '';
-            if (type == 0) {
-                // show unit = 1 ;
-                companyQuery = 'SELECT register_code, prc_name FROM company_list WHERE register_code = @register_code';
-            } else {
-                // show div = 1 ; 
-                companyQuery = 'SELECT register_code, prc_name FROM company_list WHERE register_code = @register_code';
-            }
-
-            const companyResult = await pool.request()
-                .input('register_code', sql.VarChar, register_code)
-                .query(companyQuery);
-
-            if (companyResult.recordset.length > 0) {
-                response.push(companyResult.recordset[0]);
-            }
-        }
+        const response = shareholders.map((shareholder) => ({
+            register_code: shareholder.register_code,
+            prc_name: shareholder.CompanyList.prc_name
+        }));
 
         return res.json({ companies: response });
     } catch (error) {
-        console.error('Error in fetchAccounts:', error);
+        // Enhanced error logging with winston
+        winston.error(`Error in fetchAccountsController for mail: ${mail}, mobile: ${mobile} - ${error.message}`, {
+            stack: error.stack,
+            route: 'fetchAccounts'
+        });
         return res.status(500).json({ error: 'Internal Server Error' });
     }
 };
