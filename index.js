@@ -81,7 +81,7 @@ app.use('/fetchDividend', fetchDividendRoute);
 
 // Default Route
 app.get('/', (req, res) => {
-    res.send('Welcome to the Estock Backend API');
+    res.send('Welcome to the Estock Backend API 1.1');
 });
 
 // Error Handling for Undefined Routes
