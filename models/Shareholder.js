@@ -1,6 +1,6 @@
 // models/Shareholder.js
 module.exports = (sequelize, DataTypes) => {
-    const Shareholder = sequelize.define('Shareholder', {
+    const Shareholder = sequelize.define('T_shareholder', {
         account_number: {
             type: DataTypes.STRING,
             primaryKey: true

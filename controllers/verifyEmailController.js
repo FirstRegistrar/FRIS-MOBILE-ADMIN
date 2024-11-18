@@ -1,6 +1,6 @@
 // controllers/verifyEmailController.js
 
-const { T_shareholder } = require('../models'); // Import Sequelize models
+const { Shareholder } = require('../models'); // Import Sequelize models
 const generateCode = require('../utils/codeGenerator');
 const sendEmail = require('../utils/emailSender');
 const winston = require('winston'); // Import winston for logging
@@ -15,7 +15,7 @@ const verifyEmail = async (req, res) => {
 
     try {
         // Fetch mobile number associated with the provided email
-        const shareholder = await T_shareholder.findOne({
+        const shareholder = await Shareholder.findOne({
             where: { mail: mail },
             attributes: ['mobile'] // Only fetch the mobile number
         });
