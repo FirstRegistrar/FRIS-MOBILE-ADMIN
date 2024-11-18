@@ -93,7 +93,7 @@ app.use((req, res) => {
 // General Error Handling Middleware
 app.use((err, req, res, next) => {
     logger.error(`Unexpected error: ${err.message}`, { stack: err.stack });
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({ error: 'Fatal Error' });
 });
 
 // Start the server
