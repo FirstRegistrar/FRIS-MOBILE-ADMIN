@@ -1,0 +1,19 @@
+2024-11-18T12:42:33.800Z [INFO]: Server is running on port 3000
+2024-11-18T15:22:30.945Z [INFO]: Server is running on port 3000
+2024-11-18T15:22:48.608Z [INFO]: Received GET request for /
+2024-11-18T15:22:48.683Z [WARN]: Unauthorized access attempt on /
+2024-11-18T15:29:22.938Z [INFO]: Received GET request for /
+2024-11-18T15:29:22.940Z [WARN]: Unauthorized access attempt on /
+2024-11-18T15:29:23.161Z [INFO]: Received GET request for /favicon.ico
+2024-11-18T15:29:23.163Z [WARN]: Unauthorized access attempt on /favicon.ico
+2024-11-18T15:29:30.984Z [INFO]: Received POST request for /verifyEmail
+2024-11-18T15:32:15.780Z [INFO]: Received POST request for /verifyEmail
+2024-11-18T15:32:42.641Z [INFO]: Server is running on port 3000
+2024-11-18T15:32:49.922Z [INFO]: Received POST request for /verifyEmail
+2024-11-18T15:34:03.724Z [INFO]: Server is running on port 3000
+2024-11-18T15:34:09.630Z [INFO]: Received POST request for /verifyEmail
+2024-11-18T15:34:25.233Z [INFO]: Received POST request for /verifyEmail
+2024-11-18T15:34:43.766Z [INFO]: Received GET request for /
+2024-11-18T15:34:43.768Z [WARN]: Unauthorized access attempt on /
+2024-11-18T15:34:43.861Z [INFO]: Received GET request for /favicon.ico
+2024-11-18T15:34:43.862Z [WARN]: Unauthorized access attempt on /favicon.ico
