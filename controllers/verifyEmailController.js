@@ -14,7 +14,7 @@ const verifyEmail = async (req, res) => {
     }
 
     try { 
-        const shareholder = await T_shareholder.findOne({
+        const shareholder = await Shareholder.findOne({
             where: { mail: mail },
             attributes: ['mobile'] // Only fetch the mobile number
         });
