@@ -5,7 +5,7 @@ const fetchStockAccounts = async (req, res) => {
     const { mail, mobile, register_code } = req.body;
 
     // Validate input
-    if (!mail || !mobile || !register_code) {
+    if ((!mail && !mobile) || !register_code) {
         return res.status(400).json({ error: 'Email, Phone, and RegCode are required' });
     }
 
