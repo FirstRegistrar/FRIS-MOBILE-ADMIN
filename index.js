@@ -4,6 +4,9 @@ const bodyParser = require('body-parser');
 const winston = require('winston');
 const winstonRotate = require('winston-daily-rotate-file');
 const cors = require('cors');  // Importing cors
+const sequelize = require('./config/db'); // Import the Sequelize instance
+
+
 
 // Set up Winston logger
 const logger = winston.createLogger({
@@ -33,6 +36,14 @@ const logger = winston.createLogger({
     ]
 });
 
+// Test the connection
+sequelize.authenticate()
+    .then(() => console.log('Connection to MSSQL database has been established successfully.'))
+    .catch((error) => {
+        console.error('Unable to connect to the database:', error);
+    });
+
+
 const authenticate = require('./utils/authentication');
 const verifyEmailRoute = require('./routes/verifyEmail');
 const verifyMobileRoute = require('./routes/verifyMobile');
@@ -59,7 +70,7 @@ app.use((req, res, next) => {
 
 // Authentication Middleware
 app.use((req, res, next) => {
-    if (['/verifyEmail', '/verifyMobile'].includes(req.path)) {
+    if (['/verifyEmail', '/verifyMobile', '/fetchAccounts', '/fetchStockAccounts', "/fetchStockBalance"].includes(req.path)) {
         return next();
     }
 

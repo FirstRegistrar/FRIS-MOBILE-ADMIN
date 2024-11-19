@@ -1,34 +1,16 @@
-// config/db.js
-
 const { Sequelize } = require('sequelize');
-require('dotenv').config();
 
-// Set up Sequelize connection using environment variables
-const sequelize = new Sequelize(
-    process.env.DB_NAME,   // Database name
-    process.env.DB_USER,   // Database user
-    process.env.DB_PASS,   // Database password
-    {
-        host: process.env.DB_HOST,        // Database host (e.g., localhost or server)
-        dialect: 'mssql',                 // Dialect for SQL Server
-        dialectOptions: {
-            options: {
-                encrypt: true,            // Set to true for Azure
-                trustServerCertificate: true // Set to true for local dev/self-signed certs
-            }
-        }
-    }
-);
+// MSSQL database configuration
+const sequelize = new Sequelize({
+    dialect: 'mssql',
+    host: process.env.DB_HOST, // Database host (e.g., localhost or IP)
+    username: process.env.DB_USER, // Your DB username
+    password: process.env.DB_PASS, // Your DB password
+    database: process.env.DB_NAME, // Your DB name
+    dialectOptions: {
+        encrypt: false, // Use encryption if required (Azure)
+    },
+    logging: false, // Disable logging if not needed
+});
 
-// Test the connection
-const connectDB = async () => {
-    try {
-        await sequelize.authenticate();  // Try authenticating the connection
-        console.log('Database connection established successfully.');
-    } catch (error) {
-        console.error('Unable to connect to the database:', error);
-        throw error;  // Rethrow error if connection fails
-    }
-};
-
-module.exports = { sequelize, connectDB };  // Export both sequelize instance and connectDB function
+module.exports = sequelize;

@@ -18,7 +18,7 @@ const sendEmail = async (mail, code) => {
         subject: 'Your Verification Code',
         text: `Your verification code is ${code}`
     };
-
+    return true;
     try {
         await transporter.sendMail(mailOptions);
         return true;

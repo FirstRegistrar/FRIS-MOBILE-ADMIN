@@ -1,7 +1,5 @@
-// controllers/fetchStockBalanceController.js
-
-const { T_units, T_shareholder } = require('../models'); // Import Sequelize models
-const winston = require('winston'); // Import winston for logging
+const sequelize = require('../config/db'); // Import the Sequelize instance
+const winston = require('winston'); // For logging errors
 
 const fetchStockBalance = async (req, res) => {
     const { account_no, register_code, mail, mobile } = req.body;
@@ -12,41 +10,74 @@ const fetchStockBalance = async (req, res) => {
     }
 
     try {
-        // Fetch total units with cert_status = 1 using Sequelize's `sum` method
-        const unitsResult = await T_units.sum('no_of_units', {
-            where: {
-                account_no: account_no,
-                reg_code: register_code,
-                cert_status: 1
-            }
-        });
-        const total_units = unitsResult || 0;
+        const trimmedAccountNo = account_no.trim();
+        const trimmedRegisterCode = register_code.trim();
+        const trimmedMail = mail.trim();
+        const trimmedMobile = mobile.trim();
 
-        // Fetch shareholder information using Sequelize's `findOne` method
-        const shareholder = await T_shareholder.findOne({
-            where: {
-                mail: mail,
-                mobile: mobile,
-                account_no: account_no,
-                register_code: register_code
+        // Query to fetch the total units with cert_status = 1
+        const unitsQuery = `
+            SELECT SUM(no_of_units) AS total_units
+            FROM T_units
+            WHERE account_no = :account_no
+            AND reg_code = :register_code
+            AND certificate_status = 1
+        `;
+
+        // Execute the query for total units
+        const [unitsResult] = await sequelize.query(unitsQuery, {
+            replacements: {
+                account_no: trimmedAccountNo,
+                register_code: trimmedRegisterCode,
             },
-            attributes: ['haddress', 'holder_address2', 'hcity_town', 'hlast_name', 'hfirst_name', 'hmname']
+            type: sequelize.QueryTypes.SELECT,
         });
 
-        if (!shareholder) {
+        const total_units = unitsResult.total_units || 0;
+
+        // Query to fetch shareholder information
+        const shareholderQuery = `
+            SELECT 
+                addr1, 
+                addr2, 
+                st, 
+                last_nm, 
+                first_nm, 
+                middle_nm
+            FROM T_shold
+            WHERE (email = :mail
+            OR mobile = :mobile)
+            AND Acctno = :account_no
+            AND regcode = :register_code
+        `;
+
+        // Execute the query for shareholder information
+        const [shareholderResult] = await sequelize.query(shareholderQuery, {
+            replacements: {
+                mail: trimmedMail,
+                mobile: trimmedMobile,
+                account_no: trimmedAccountNo,
+                register_code: trimmedRegisterCode,
+            },
+            type: sequelize.QueryTypes.SELECT,
+        });
+
+        if (!shareholderResult) {
             return res.status(404).json({ error: 'Shareholder not found' });
         }
 
-        return res.json({ shareholder, total_units });
-
+        return res.json({ shareholder: shareholderResult, total_units });
     } catch (error) {
-        // Logging the error using Winston
+        // Enhanced error logging with Winston
         winston.error(`Error in fetchStockBalanceController for account_no: ${account_no}, register_code: ${register_code}, mail: ${mail}, mobile: ${mobile} - ${error.message}`, {
             stack: error.stack,
-            route: 'fetchStockBalance'
+            route: 'fetchStockBalance',
         });
 
-        return res.status(500).json({ error: 'Internal Server Error' });
+        return res.status(500).json({
+            error: 'Internal Server Error',
+            details: error.message,
+        });
     }
 };
 

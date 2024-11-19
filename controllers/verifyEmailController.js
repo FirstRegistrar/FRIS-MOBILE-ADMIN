@@ -1,48 +1,62 @@
-// controllers/verifyEmailController.js
-
-const { Shareholder } = require('../models'); // Import Sequelize models
-const generateCode = require('../utils/codeGenerator');
-const sendEmail = require('../utils/emailSender');
-const winston = require('winston'); // Import winston for logging
+const sequelize = require('../config/db'); // Import the Sequelize instance
+const winston = require('winston'); // For logging
+const sendEmail = require('../utils/emailSender'); // Assuming you have a utility function for sending emails
+const generateCode = require('../utils/codeGenerator'); // Assuming you have a utility function for generating codes
 
 const verifyEmail = async (req, res) => {
     const { mail } = req.body;
 
     // Validate input
-    if (!mail) {
-        return res.status(400).json({ error: 'Email is required' });
+    if (!mail || typeof mail !== 'string') {
+        return res.status(400).json({ error: 'A valid email address is required' });
     }
 
     try {
-        // Fetch mobile number associated with the provided email
-        const shareholder = await Shareholder.findOne({
-            where: { mail: mail },
-            attributes: ['mobile'] // Only fetch the mobile number
-        });
+        const trimmedMail = mail.trim();
 
-        if (shareholder) {
-            const mobile = shareholder.mobile;
-            const code = generateCode();  // Generate verification code
+        // Execute raw query to fetch the mobile number using MSSQL syntax (TOP instead of LIMIT)
+        const [result] = await sequelize.query(
+            'SELECT TOP 1 mobile FROM T_shold WHERE email = :mail',
+            {
+                replacements: { mail: trimmedMail }, // Bind the parameter to avoid SQL injection
+                type: sequelize.QueryTypes.SELECT, // Ensure the query returns rows
+            }
+        );
+
+        // Check if a result was returned
+        if (result && result.mobile) {
+            const mobile = result.mobile;
+            const code = generateCode(); // Generate a verification code
 
             // Send email with the generated code
-            const mailSent = await sendEmail(mail, code);
+            const mailSent = await sendEmail(trimmedMail, code);
 
             if (mailSent) {
-                return res.json({ code, exists: true, mobile });
+                return res.json({
+                    code,
+                    exists: true,
+                    mobile,
+                });
             } else {
-                return res.status(500).json({ error: 'Failed to send mail' });
+                return res.status(500).json({ error: 'Failed to send the email. Please try again later.' });
             }
         } else {
-            return res.json({ exists: false, message: 'Email not found' });
+            return res.status(404).json({
+                exists: false,
+                message: 'Email not found in the database.',
+            });
         }
     } catch (error) {
         // Logging error with Winston
         winston.error(`Error in verifyEmailController for mail: ${mail} - ${error.message}`, {
             stack: error.stack,
-            route: 'verifyEmail'
+            route: 'verifyEmail',
         });
 
-        return res.status(500).json({ error: 'Internal Server Error ' + error.message});
+        return res.status(500).json({
+            error: 'Internal Server Error',
+            details: error.message,
+        });
     }
 };
 
