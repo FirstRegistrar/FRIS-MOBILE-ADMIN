@@ -5,7 +5,7 @@ const fetchAccounts = async (req, res) => {
     const { mail, mobile } = req.body;
 
     // Validate input
-    if (!mail || !mobile) {
+    if (!mail && !mobile) {
         return res.status(400).json({ error: 'Email and Phone are required' });
     }
 
