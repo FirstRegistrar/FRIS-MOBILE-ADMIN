@@ -5,7 +5,7 @@ const fetchStockBalance = async (req, res) => {
     const { account_no, register_code, mail, mobile } = req.body;
 
     // Validation for required fields
-    if (!account_no || !register_code || !mail || !mobile) {
+    if (!account_no || !register_code || (!mail && !mobile)) {
         return res.status(400).json({ error: 'AccountNo, Register Code, Email, and Phone are required' });
     }
 
