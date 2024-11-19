@@ -70,7 +70,7 @@ app.use((req, res, next) => {
 
 // Authentication Middleware
 app.use((req, res, next) => {
-    if (['/verifyEmail', '/verifyMobile', '/fetchAccounts', '/fetchStockAccounts', "/fetchStockBalance"].includes(req.path)) {
+    if (['/verifyEmail', '/verifyMobile', '/fetchAccounts', '/fetchStockAccounts', '/fetchStockBalance', '/fetchDividend'].includes(req.path)) {
         return next();
     }
 
