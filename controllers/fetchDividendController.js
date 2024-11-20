@@ -6,75 +6,119 @@ const fetchDividend = async (req, res) => {
 
     // Validate input
     if (!register_code || (!mail && !mobile)) {
-        return res.status(400).json({ error: 'Register Code, Email, and Phone are required' });
+        return res.status(400).json({ error: 'Register Code, Email, or Phone are required' });
     }
 
     try {
-        const trimmedMail = mail.trim();
-        const trimmedMobile = mobile.trim();
+        const trimmedMail = mail ? mail.trim() : null;
+        const trimmedMobile = mobile ? mobile.trim() : null;
         const trimmedRegCode = register_code.trim();
 
-        // Define the SQL query using Sequelize ORM
-        const query = `
-        SELECT s.hlast_name lastname, s.hfirst_name firstname, s.hmname middlename, s.hcity_town city, 
-        d.date_paid date_paid, d.divwarrant_no warrant_no, d.total_holding total, s.haddress address1, 
-        s.holder_address2 address2, s.register_code register_code, s.mail email, s.mobile mobile, 
-        s.account_number account_no, d.cslno cslno, d.divgross_amt gross_amt, d.div_netamt net_amt
-        FROM T_shareholder s
-            INNER JOIN T_Divs2 d ON s.account_number = d.account_no
-            WHERE s.register_code = :register_code 
-            AND (s.mail = :mail OR s.mobile = :mobile)
-            AND d.date_paid IS NOT NULL
+        const QUERY_TIMEOUT = 60000; // 60 seconds
+
+        // Query 1: Fetch shareholder details by register_code and email or mobile
+        let shareholderQuery = `
+            SELECT last_nm lastname, first_nm firstname, middle_nm middlename, st city,
+            addr1 address1, addr2 address2, regcode register_code, email, mobile, Acctno account_no
+            FROM T_shold
+            WHERE regcode = :register_code
         `;
 
-        // Execute the raw query with Sequelize
-        const shareholders = await sequelize.query(query, {
-            replacements: {
-                mail: trimmedMail,
-                mobile: trimmedMobile,
-                register_code: trimmedRegCode,
-            },
-            type: sequelize.QueryTypes.SELECT,
-        });
-
-        // Check if results are found
-        if (shareholders.length === 0) {
-            return res.status(404).json({ error: 'No Dividend payment found for the given parameters' });
+        if (trimmedMail) {
+            shareholderQuery += ' AND email = :mail';
+        } else if (trimmedMobile) {
+            shareholderQuery += ' AND mobile = :mobile';
         }
 
-        const data = shareholders.map(row => ({
-            register_code: row.regcode,
-            mail: row.email,
-            mobile: row.mobile,
-            account_no: row.account_no,
-            csl_no: row.cslno,
-            div_net_amt: row.net_amt,
-            div_gross_amt: row.gross_amt,
-            firstname: row.firstname,
-            lastname: row.lastname,
-            middlename: row.middlename,
-            address: row.address1,
-            address2: row.address2,
-            city: row.city,
-            date_paid: row.date_paid,
-            div_warrant_no: row.warrant_no,
-            total: row.total
+        const shareholders = await sequelize.query(shareholderQuery, {
+            replacements: {
+                register_code: trimmedRegCode,
+                mail: trimmedMail,
+                mobile: trimmedMobile,
+            },
+            type: sequelize.QueryTypes.SELECT,
+            options: { timeout: QUERY_TIMEOUT },
+        });
 
-        }));
+        if (shareholders.length === 0) {
+            return res.status(404).json({ error: 'No shareholder found for the given parameters' });
+        }
+
+        // Get account numbers from shareholder query result
+        const accountNumbers = shareholders.map((sh) => sh.account_no);
+
+        if (accountNumbers.length === 0) {
+            return res.status(404).json({ error: 'No account numbers found for the given shareholder(s)' });
+        }
+
+        // Batching logic for Query 2
+        const BATCH_SIZE = 500;
+        let dividends = [];
+
+        for (let i = 0; i < accountNumbers.length; i += BATCH_SIZE) {
+            const batch = accountNumbers.slice(i, i + BATCH_SIZE);
+
+            const batchDividends = await sequelize.query(
+                `
+                SELECT account_no, date_paid, divwarrant_no warrant_no, total_holding total,
+                divgross_amt gross_amt, div_netamt net_amt, cslno
+                FROM T_Divs2
+                WHERE account_no IN (:accountNumbers) AND date_paid IS NOT NULL
+                `,
+                {
+                    replacements: { accountNumbers: batch },
+                    type: sequelize.QueryTypes.SELECT,
+                    options: { timeout: QUERY_TIMEOUT },
+                }
+            );
+
+            dividends = dividends.concat(batchDividends);
+        }
+
+        if (dividends.length === 0) {
+            return res.status(404).json({ error: 'No Dividend payment found for the given shareholder(s)' });
+        }
+
+        // Combine shareholder and dividend data
+        const data = shareholders.map((shareholder) => {
+            const relatedDividends = dividends.filter(
+                (dividend) => dividend.account_no === shareholder.account_no
+            );
+
+            return relatedDividends.map((dividend) => ({
+                register_code: shareholder.register_code,
+                mail: shareholder.email,
+                mobile: shareholder.mobile,
+                account_no: shareholder.account_no,
+                csl_no: dividend.cslno,
+                div_net_amt: dividend.net_amt,
+                div_gross_amt: dividend.gross_amt,
+                firstname: shareholder.firstname,
+                lastname: shareholder.lastname,
+                middlename: shareholder.middlename,
+                address: shareholder.address1,
+                address2: shareholder.address2,
+                city: shareholder.city,
+                date_paid: dividend.date_paid,
+                div_warrant_no: dividend.warrant_no,
+                total: dividend.total,
+            }));
+        }).flat();
 
         return res.json({ shareholders: data });
-
-
     } catch (error) {
         // Enhanced error logging with Winston
-        winston.error(`Error in fetchDividendController for register_code: ${register_code}, mail: ${mail}, mobile: ${mobile} - ${error.message}`, {
-            stack: error.stack,
-            route: 'fetchDividend',
-        });
+        winston.error(
+            `Error in fetchDividendController for register_code: ${register_code}, mail: ${mail}, mobile: ${mobile} - ${error.message}`,
+            {
+                stack: error.stack,
+                route: 'fetchDividend',
+            }
+        );
 
         return res.status(500).json({
             error: 'Internal Server Error',
-            details: error.message+" "+error.stack,
+            details: `${error.message} ${error.stack}`,
         });
     }
 };

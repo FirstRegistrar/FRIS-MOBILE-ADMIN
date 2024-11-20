@@ -70,10 +70,6 @@ app.use((req, res, next) => {
 
 // Authentication Middleware
 app.use((req, res, next) => {
-    if (['/verifyEmail', '/verifyMobile', '/fetchAccounts', '/fetchStockAccounts', '/fetchStockBalance', '/fetchDividend'].includes(req.path)) {
-        return next();
-    }
-
     if (!authenticate(req)) {
         logger.warn(`Unauthorized access attempt on ${req.path}`);
         return res.status(401).json({ error: 'Invalid API Key, Version 1.0.5' });
