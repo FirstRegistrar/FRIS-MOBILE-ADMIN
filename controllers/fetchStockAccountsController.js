@@ -6,34 +6,43 @@ const fetchStockAccounts = async (req, res) => {
 
     // Validate input
     if ((!mail && !mobile) || !register_code) {
-        return res.status(400).json({ error: 'Email, Phone, and RegCode are required' });
+        return res.status(400).json({ error: 'Either Email or Phone, and RegCode are required' });
     }
 
     try {
-        const trimmedMail = mail.trim();
-        const trimmedMobile = mobile.trim();
+        const trimmedMail = mail ? mail.trim() : null;
+        const trimmedMobile = mobile ? mobile.trim() : null;
         const trimmedRegCode = register_code.trim();
 
-        // Define the SQL query
-        const query = `
+        // Start the base query
+        let query = `
             SELECT 
                 Acctno, 
                 last_nm, 
                 first_nm, 
                 middle_nm
             FROM T_shold
-            WHERE (email = :mail
-            OR mobile = :mobile)
-            AND regcode = :register_code
+            WHERE regcode = :register_code
         `;
+
+        const replacements = { register_code: trimmedRegCode };
+
+        // Append conditions based on input availability
+        if (trimmedMail && trimmedMobile) {
+            query += ` AND (email = :mail OR mobile = :mobile)`;
+            replacements.mail = trimmedMail;
+            replacements.mobile = trimmedMobile;
+        } else if (trimmedMail) {
+            query += ` AND email = :mail`;
+            replacements.mail = trimmedMail;
+        } else if (trimmedMobile) {
+            query += ` AND mobile = :mobile`;
+            replacements.mobile = trimmedMobile;
+        }
 
         // Execute the raw query with Sequelize
         const shareholders = await sequelize.query(query, {
-            replacements: {
-                mail: trimmedMail,
-                mobile: trimmedMobile,
-                register_code: trimmedRegCode,
-            },
+            replacements,
             type: sequelize.QueryTypes.SELECT,
         });
 
@@ -66,3 +75,4 @@ const fetchStockAccounts = async (req, res) => {
 };
 
 module.exports = fetchStockAccounts;
+

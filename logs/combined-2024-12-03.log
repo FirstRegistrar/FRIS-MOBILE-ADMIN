@@ -1,0 +1,26 @@
+2024-12-03T14:38:51.684Z [INFO]: Server is running on port 3000
+2024-12-03T19:11:58.102Z [INFO]: Server is running on port 3000
+2024-12-03T19:12:40.271Z [INFO]: Received POST request for /fetchStockAccounts
+2024-12-03T19:13:00.492Z [INFO]: Received POST request for /fetchAccounts
+2024-12-03T19:15:29.767Z [INFO]: Server is running on port 3000
+2024-12-03T19:15:42.328Z [INFO]: Received POST request for /fetchAccounts
+2024-12-03T19:15:44.611Z [INFO]: Received POST request for /fetchAccounts
+2024-12-03T19:16:01.389Z [INFO]: Received POST request for /fetchAccounts
+2024-12-03T19:22:12.687Z [INFO]: Received POST request for /fetchAccounts
+2024-12-03T19:22:26.698Z [INFO]: Received POST request for /verifyMobile
+2024-12-03T19:23:33.153Z [INFO]: Received POST request for /verifyMobile
+2024-12-03T19:24:01.312Z [INFO]: Received POST request for /verifyEmail
+2024-12-03T19:24:14.975Z [INFO]: Received POST request for /verifyMobile
+2024-12-03T19:24:16.312Z [INFO]: Received POST request for /verifyMobile
+2024-12-03T19:24:35.371Z [INFO]: Received POST request for /verifyMobile
+2024-12-03T19:24:58.963Z [INFO]: Received POST request for /verifyMobile
+2024-12-03T19:25:37.594Z [INFO]: Received POST request for /verifyMobile
+2024-12-03T19:25:52.545Z [INFO]: Received POST request for /fetchAccounts
+2024-12-03T19:26:15.185Z [INFO]: Received POST request for /fetchAccounts
+2024-12-03T19:28:18.324Z [INFO]: Received POST request for /fetchStockAccounts
+2024-12-03T19:28:35.037Z [INFO]: Received POST request for /fetchStockAccounts
+2024-12-03T19:30:10.380Z [INFO]: Server is running on port 3000
+2024-12-03T19:30:28.744Z [INFO]: Received POST request for /fetchStockAccounts
+2024-12-03T19:31:21.431Z [INFO]: Received POST request for /fetchStockBalance
+2024-12-03T19:33:13.337Z [INFO]: Server is running on port 3000
+2024-12-03T19:33:20.957Z [INFO]: Received POST request for /fetchStockBalance

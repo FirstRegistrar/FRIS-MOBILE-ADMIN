@@ -6,29 +6,43 @@ const fetchAccounts = async (req, res) => {
 
     // Validate input
     if (!mail && !mobile) {
-        return res.status(400).json({ error: 'Email and Phone are required' });
+        return res.status(400).json({ error: 'Either Email or Phone is required' });
     }
 
     try {
-        const trimmedMail = mail.trim();
-        const trimmedMobile = mobile.trim();
+        const trimmedMail = mail ? mail.trim() : null;
+        const trimmedMobile = mobile ? mobile.trim() : null;
 
         // Log the trimmed values to verify if they're correct
         console.log(`Mail: ${trimmedMail}, Mobile: ${trimmedMobile}`);
 
-        // Define the query to fetch associated companies using Sequelize raw query
-        const query = `
+        // Start the base query
+        let query = `
             SELECT DISTINCT TS.regcode,
                 CL.Name
             FROM T_shold TS
             INNER JOIN ___OnlineRegs CL
                 ON TS.regcode = CL.Id
-            WHERE TS.email = :mail OR TS.mobile = :mobile
         `;
+
+        const replacements = {};
+
+        // Append conditions based on input availability
+        if (trimmedMail && trimmedMobile) {
+            query += ` WHERE TS.email = :mail OR TS.mobile = :mobile`;
+            replacements.mail = trimmedMail;
+            replacements.mobile = trimmedMobile;
+        } else if (trimmedMail) {
+            query += ` WHERE TS.email = :mail`;
+            replacements.mail = trimmedMail;
+        } else if (trimmedMobile) {
+            query += ` WHERE TS.mobile = :mobile`;
+            replacements.mobile = trimmedMobile;
+        }
 
         // Execute raw query using Sequelize
         const result = await sequelize.query(query, {
-            replacements: { mail: trimmedMail, mobile: trimmedMobile },
+            replacements,
             type: sequelize.QueryTypes.SELECT,
         });
 

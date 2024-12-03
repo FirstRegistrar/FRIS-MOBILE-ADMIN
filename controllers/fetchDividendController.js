@@ -41,14 +41,14 @@ const fetchDividend = async (req, res) => {
         });
 
         if (shareholders.length === 0) {
-            return res.status(404).json({ error: 'No shareholder found for the given parameters' });
+            return res.status(404).json({ error: 'No Dividend payment found for the given shareholder(s)' });
         }
 
         // Get account numbers from shareholder query result
         const accountNumbers = shareholders.map((sh) => sh.account_no);
 
         if (accountNumbers.length === 0) {
-            return res.status(404).json({ error: 'No account numbers found for the given shareholder(s)' });
+            return res.status(404).json({ error: 'No Dividend payment found for the given shareholder(s)' });
         }
 
         // Batching logic for Query 2

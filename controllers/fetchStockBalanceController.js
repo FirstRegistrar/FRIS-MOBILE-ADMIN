@@ -6,14 +6,14 @@ const fetchStockBalance = async (req, res) => {
 
     // Validation for required fields
     if (!account_no || !register_code || (!mail && !mobile)) {
-        return res.status(400).json({ error: 'AccountNo, Register Code, Email, and Phone are required' });
+        return res.status(400).json({ error: 'AccountNo, Register Code, and either Email or Phone are required' });
     }
 
     try {
         const trimmedAccountNo = account_no.trim();
         const trimmedRegisterCode = register_code.trim();
-        const trimmedMail = mail.trim();
-        const trimmedMobile = mobile.trim();
+        const trimmedMail = mail ? mail.trim() : null;
+        const trimmedMobile = mobile ? mobile.trim() : null;
 
         // Query to fetch the total units with cert_status = 1
         const unitsQuery = `
@@ -35,8 +35,8 @@ const fetchStockBalance = async (req, res) => {
 
         const total_units = unitsResult.total_units || 0;
 
-        // Query to fetch shareholder information
-        const shareholderQuery = `
+        // Start the base query for shareholder information
+        let shareholderQuery = `
             SELECT 
                 addr1, 
                 addr2, 
@@ -45,20 +45,31 @@ const fetchStockBalance = async (req, res) => {
                 first_nm, 
                 middle_nm
             FROM T_shold
-            WHERE (email = :mail
-            OR mobile = :mobile)
-            AND Acctno = :account_no
+            WHERE Acctno = :account_no
             AND regcode = :register_code
         `;
 
+        const replacements = {
+            account_no: trimmedAccountNo,
+            register_code: trimmedRegisterCode,
+        };
+
+        // Append conditions for email and/or mobile
+        if (trimmedMail && trimmedMobile) {
+            shareholderQuery += ` AND (email = :mail OR mobile = :mobile)`;
+            replacements.mail = trimmedMail;
+            replacements.mobile = trimmedMobile;
+        } else if (trimmedMail) {
+            shareholderQuery += ` AND email = :mail`;
+            replacements.mail = trimmedMail;
+        } else if (trimmedMobile) {
+            shareholderQuery += ` AND mobile = :mobile`;
+            replacements.mobile = trimmedMobile;
+        }
+
         // Execute the query for shareholder information
         const [shareholderResult] = await sequelize.query(shareholderQuery, {
-            replacements: {
-                mail: trimmedMail,
-                mobile: trimmedMobile,
-                account_no: trimmedAccountNo,
-                register_code: trimmedRegisterCode,
-            },
+            replacements,
             type: sequelize.QueryTypes.SELECT,
         });
 
