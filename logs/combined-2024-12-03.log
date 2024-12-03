@@ -24,3 +24,15 @@
 2024-12-03T19:31:21.431Z [INFO]: Received POST request for /fetchStockBalance
 2024-12-03T19:33:13.337Z [INFO]: Server is running on port 3000
 2024-12-03T19:33:20.957Z [INFO]: Received POST request for /fetchStockBalance
+2024-12-03T19:35:20.032Z [INFO]: Server is running on port 3000
+2024-12-03T19:35:23.022Z [INFO]: Received POST request for /fetchDividends
+2024-12-03T19:35:23.024Z [ERROR]: Route not found: POST /fetchDividends
+2024-12-03T19:35:27.178Z [INFO]: Received POST request for /fetchDividend
+2024-12-03T19:35:28.750Z [INFO]: Received POST request for /fetchDividend
+2024-12-03T19:35:36.559Z [INFO]: Received POST request for /fetchDividends
+2024-12-03T19:35:36.562Z [ERROR]: Route not found: POST /fetchDividends
+2024-12-03T19:35:43.202Z [INFO]: Received POST request for /fetchDividend
+2024-12-03T19:36:16.326Z [INFO]: Received POST request for /verifyEmail
+2024-12-03T19:36:32.487Z [INFO]: Received POST request for /fetchStockAccounts
+2024-12-03T19:36:46.191Z [INFO]: Received POST request for /fetchStockAccounts
+2024-12-03T19:37:00.235Z [INFO]: Received POST request for /verifyMobile
