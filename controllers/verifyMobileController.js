@@ -16,7 +16,7 @@ const verifyMobile = async (req, res) => {
 
         // Execute raw query to fetch the email associated with the given mobile number
         const [result] = await sequelize.query(
-            'SELECT TOP 1 email, first_nm, last_nm  FROM T_shold WHERE mobile = :mobile',
+            'SELECT TOP 1 email, first_nm, middle_nm, last_nm  FROM T_shold WHERE mobile = :mobile',
             {
                 replacements: { mobile: trimmedMobile }, // Bind the mobile parameter
                 type: sequelize.QueryTypes.SELECT, // Ensure the query returns rows
@@ -28,6 +28,7 @@ const verifyMobile = async (req, res) => {
             const mail = result.email;
             const first_nm = result.first_nm;
             const last_nm = result.last_nm;
+            const middle_nm = result.middle_nm
             const code = generateCode(); // Generate a verification code
 
             // Send SMS with the generated code
@@ -40,6 +41,7 @@ const verifyMobile = async (req, res) => {
                     mail,
                     first_nm,
                     last_nm,
+                    middle_nm,
                 });
             } else {
                 return res.status(500).json({ error: 'Failed to send SMS. Please try again later.' });

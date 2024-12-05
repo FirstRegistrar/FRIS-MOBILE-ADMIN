@@ -36,3 +36,5 @@
 2024-12-03T19:36:32.487Z [INFO]: Received POST request for /fetchStockAccounts
 2024-12-03T19:36:46.191Z [INFO]: Received POST request for /fetchStockAccounts
 2024-12-03T19:37:00.235Z [INFO]: Received POST request for /verifyMobile
+2024-12-03T19:39:48.298Z [INFO]: Server is running on port 3000
+2024-12-03T19:39:52.297Z [INFO]: Received POST request for /verifyMobile

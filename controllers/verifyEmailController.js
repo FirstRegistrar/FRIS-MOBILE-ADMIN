@@ -16,7 +16,7 @@ const verifyEmail = async (req, res) => {
 
         // Execute raw query to fetch the mobile number using MSSQL syntax (TOP instead of LIMIT)
         const [result] = await sequelize.query(
-            'SELECT TOP 1 mobile, first_nm, last_nm FROM T_shold WHERE email = :mail',
+            'SELECT TOP 1 mobile, first_nm, middle_nm, last_nm FROM T_shold WHERE email = :mail',
             {
                 replacements: { mail: trimmedMail }, // Bind the parameter to avoid SQL injection
                 type: sequelize.QueryTypes.SELECT, // Ensure the query returns rows
@@ -28,6 +28,7 @@ const verifyEmail = async (req, res) => {
             const mobile = result.mobile;
             const first_nm = result.first_nm;
             const last_nm = result.last_nm;
+            const middle_nm = result.middle_nm;
             const code = generateCode(); // Generate a verification code
 
             // Send email with the generated code
@@ -40,6 +41,7 @@ const verifyEmail = async (req, res) => {
                     mobile,
                     first_nm,
                     last_nm,
+                    middle_nm,
                 });
             } else {
                 return res.status(500).json({ error: 'Failed to send the email. Please try again later.' });
