@@ -52,6 +52,7 @@ const fetchCompanyNameRoute = require('./routes/fetchCompanyName');
 const fetchStockAccountsRoute = require('./routes/fetchStockAccounts');
 const fetchStockBalanceRoute = require('./routes/fetchStockBalance');
 const fetchDividendRoute = require('./routes/fetchDividend');
+const fetchSubscriptionRoute = require('./routes/fetchSubscription');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -85,6 +86,7 @@ app.use('/fetchCompanyName', fetchCompanyNameRoute);
 app.use('/fetchStockAccounts', fetchStockAccountsRoute);
 app.use('/fetchStockBalance', fetchStockBalanceRoute);
 app.use('/fetchDividend', fetchDividendRoute);
+app.use('/fetchSubscription', fetchSubscriptionRoute);
 
 // Default Route
 app.get('/', (req, res) => {

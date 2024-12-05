@@ -1,2 +1,15 @@
 2024-12-05T00:22:07.637Z [INFO]: Server is running on port 3000
 2024-12-05T00:23:40.303Z [INFO]: Received POST request for /verifyMobile
+2024-12-05T01:26:04.475Z [INFO]: Server is running on port 3000
+2024-12-05T01:26:06.052Z [INFO]: Received POST request for /verifyMobile
+2024-12-05T12:44:23.838Z [INFO]: Server is running on port 3000
+2024-12-05T12:44:52.246Z [INFO]: Received GET request for /
+2024-12-05T12:44:52.250Z [WARN]: Unauthorized access attempt on /
+2024-12-05T12:47:46.095Z [INFO]: Server is running on port 3000
+2024-12-05T12:49:18.263Z [INFO]: Received POST request for /verifyEmail
+2024-12-05T12:49:35.210Z [INFO]: Received POST request for /fetchSubscription
+2024-12-05T12:50:17.394Z [INFO]: Received POST request for /fetchSubscription
+2024-12-05T12:51:14.357Z [INFO]: Server is running on port 3000
+2024-12-05T12:51:17.990Z [INFO]: Received POST request for /fetchSubscription
+2024-12-05T12:52:34.607Z [INFO]: Received POST request for /fetchSubscription
+2024-12-05T12:52:45.472Z [INFO]: Received POST request for /fetchSubscription
