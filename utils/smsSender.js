@@ -11,7 +11,7 @@ const sendSMS = async (mobile, code) => {
 
     // Construct API URL
     const apiUrl = `http://193.105.74.59/api/sendsms/plain?user=${SMS_USERNAME}&password=${SMS_PASSWORD}&sender=${sender}&SMSText=${encodeURIComponent(message)}&GSM=${mobile}`;
-
+return true;
     try {
         // Send SMS
         const response = await axios.get(apiUrl);

@@ -1,0 +1,6 @@
+2024-12-09T15:34:19.972Z [INFO]: Server is running on port 3000
+2024-12-09T15:37:10.058Z [ERROR]: Unexpected error: Unexpected non-whitespace character after JSON at position 79
+2024-12-09T15:37:19.223Z [ERROR]: Unexpected error: Unexpected non-whitespace character after JSON at position 79
+2024-12-09T15:38:01.305Z [INFO]: Received POST request for /verifyMobile
+2024-12-09T15:38:19.690Z [INFO]: Received POST request for /verifyEmail
+2024-12-09T15:38:28.283Z [INFO]: Received POST request for /verifyMobile
