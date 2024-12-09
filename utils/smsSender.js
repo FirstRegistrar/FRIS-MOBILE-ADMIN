@@ -1,27 +1,38 @@
 // utils/smsSender.js
 
+const axios = require('axios');
+
 const sendSMS = async (mobile, code) => {
-    // Integrate with your SMS gateway API here
-    // This is a stub function. Replace with actual implementation.
-    // Example using Twilio:
-    /*
-    const accountSid = 'your_twilio_sid';
-    const authToken = 'your_twilio_auth_token';
-    const client = require('twilio')(accountSid, authToken);
+    mobile = "08046007412";
+    const SMS_USERNAME = "firstregistrars";
+    const SMS_PASSWORD = "Firstreg77";
+    const sender = "FIRSTREG";
+    const message = `Your OTP Code is ${code}`;
+
+    // Construct API URL
+    const apiUrl = `http://193.105.74.59/api/sendsms/plain?user=${SMS_USERNAME}&password=${SMS_PASSWORD}&sender=${sender}&SMSText=${encodeURIComponent(message)}&GSM=${mobile}`;
 
     try {
-        await client.messages.create({
-            body: `Your verification code is ${code}`,
-            from: '+1234567890', // Your Twilio number
-            to: mobile
-        });
-        return true;
+        // Send SMS
+        const response = await axios.get(apiUrl);
+
+        // Log the full response for debugging
+        console.log('SMS API Response:', response.data);
+
+        // Check if the response is a string and contains 'OK'
+        if (typeof response.data === 'string' && response.data.includes('OK')) {
+            console.log('SMS sent successfully!');
+            return true;
+        } else {
+            console.error('Unexpected SMS API response:', response.data);
+            return false;
+        }
     } catch (error) {
-        console.error('Error sending SMS:', error);
+        // Log the full error message
+        console.error('Error sending SMS:', error.message);
+        console.error('Error details:', error.response ? error.response.data : 'No response data');
         return false;
     }
-    */
-    return true; // Stub return value
 };
 
 module.exports = sendSMS;

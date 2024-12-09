@@ -14,9 +14,24 @@ const verifyEmail = async (req, res) => {
     try {
         const trimmedMail = mail.trim();
 
-        // Execute raw query to fetch the mobile number using MSSQL syntax (TOP instead of LIMIT)
+        // Modified query to prioritize accounts with the most complete information
         const [result] = await sequelize.query(
-            'SELECT TOP 1 mobile, first_nm, middle_nm, last_nm FROM T_shold WHERE email = :mail',
+            `
+            SELECT TOP 1 
+                mobile, 
+                first_nm, 
+                middle_nm, 
+                last_nm
+            FROM T_shold
+            WHERE email = :mail
+            ORDER BY 
+                (CASE 
+                    WHEN first_nm IS NOT NULL AND middle_nm IS NOT NULL AND last_nm IS NOT NULL THEN 3
+                    WHEN first_nm IS NOT NULL AND last_nm IS NOT NULL THEN 2
+                    WHEN first_nm IS NOT NULL THEN 1
+                    ELSE 0
+                END) DESC
+            `,
             {
                 replacements: { mail: trimmedMail }, // Bind the parameter to avoid SQL injection
                 type: sequelize.QueryTypes.SELECT, // Ensure the query returns rows

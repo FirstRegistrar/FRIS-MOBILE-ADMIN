@@ -14,9 +14,24 @@ const verifyMobile = async (req, res) => {
     try {
         const trimmedMobile = mobile.trim();
 
-        // Execute raw query to fetch the email associated with the given mobile number
+        // Modified query to prioritize accounts with the most complete information
         const [result] = await sequelize.query(
-            'SELECT TOP 1 email, first_nm, middle_nm, last_nm  FROM T_shold WHERE mobile = :mobile',
+            `
+            SELECT TOP 1 
+                email, 
+                first_nm, 
+                middle_nm, 
+                last_nm
+            FROM T_shold
+            WHERE mobile = :mobile
+            ORDER BY 
+                (CASE 
+                    WHEN first_nm IS NOT NULL AND middle_nm IS NOT NULL AND last_nm IS NOT NULL THEN 3
+                    WHEN first_nm IS NOT NULL AND last_nm IS NOT NULL THEN 2
+                    WHEN first_nm IS NOT NULL THEN 1
+                    ELSE 0
+                END) DESC
+            `,
             {
                 replacements: { mobile: trimmedMobile }, // Bind the mobile parameter
                 type: sequelize.QueryTypes.SELECT, // Ensure the query returns rows
@@ -28,7 +43,7 @@ const verifyMobile = async (req, res) => {
             const mail = result.email;
             const first_nm = result.first_nm;
             const last_nm = result.last_nm;
-            const middle_nm = result.middle_nm
+            const middle_nm = result.middle_nm;
             const code = generateCode(); // Generate a verification code
 
             // Send SMS with the generated code
