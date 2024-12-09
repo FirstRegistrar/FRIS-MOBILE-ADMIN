@@ -14,7 +14,7 @@ const fetchDividend = async (req, res) => {
         const trimmedMobile = mobile ? mobile.trim() : null;
         const trimmedRegCode = register_code.trim();
 
-        const QUERY_TIMEOUT = 60000; // 60 seconds
+        const QUERY_TIMEOUT = 260000; // 260 seconds
 
         // Query 1: Fetch shareholder details by register_code and email or mobile
         let shareholderQuery = `

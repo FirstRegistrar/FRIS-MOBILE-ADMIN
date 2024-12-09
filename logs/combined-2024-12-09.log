@@ -4,3 +4,9 @@
 2024-12-09T15:38:01.305Z [INFO]: Received POST request for /verifyMobile
 2024-12-09T15:38:19.690Z [INFO]: Received POST request for /verifyEmail
 2024-12-09T15:38:28.283Z [INFO]: Received POST request for /verifyMobile
+2024-12-09T15:43:10.451Z [INFO]: Server is running on port 3000
+2024-12-09T15:43:23.620Z [INFO]: Received POST request for /verifyMobile
+2024-12-09T15:54:20.672Z [INFO]: Received POST request for /verifyMobile
+2024-12-09T15:54:38.121Z [INFO]: Received POST request for /fetchDividends
+2024-12-09T15:54:38.122Z [ERROR]: Route not found: POST /fetchDividends
+2024-12-09T15:54:45.418Z [INFO]: Received POST request for /fetchDividend

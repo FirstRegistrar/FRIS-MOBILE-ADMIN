@@ -9,6 +9,7 @@ const sequelize = new Sequelize({
     database: process.env.DB_NAME, // Your DB name
     dialectOptions: {
         encrypt: false, // Use encryption if required (Azure)
+        requestTimeout: 260000, // 260 seconds
     },
     logging: false, // Disable logging if not needed
 });
