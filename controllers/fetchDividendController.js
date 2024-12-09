@@ -14,7 +14,8 @@ const fetchDividend = async (req, res) => {
         const trimmedMobile = mobile ? mobile.trim() : null;
         const trimmedRegCode = register_code.trim();
 
-        const QUERY_TIMEOUT = 260000; // 260 seconds
+        const QUERY_TIMEOUT = 260000; // 2 minutes
+        const BATCH_SIZE = 50; // Smaller batch size for better performance
 
         // Query 1: Fetch shareholder details by register_code and email or mobile
         let shareholderQuery = `
@@ -51,28 +52,36 @@ const fetchDividend = async (req, res) => {
             return res.status(404).json({ error: 'No Dividend payment found for the given shareholder(s)' });
         }
 
-        // Batching logic for Query 2
-        const BATCH_SIZE = 500;
+        // Fetch dividends in smaller batches
         let dividends = [];
-
         for (let i = 0; i < accountNumbers.length; i += BATCH_SIZE) {
             const batch = accountNumbers.slice(i, i + BATCH_SIZE);
 
-            const batchDividends = await sequelize.query(
-                `
-                SELECT account_no, date_paid, divwarrant_no warrant_no, total_holding total,
-                divgross_amt gross_amt, div_netamt net_amt, cslno
-                FROM T_Divs2
-                WHERE account_no IN (:accountNumbers) AND date_paid IS NOT NULL
-                `,
-                {
-                    replacements: { accountNumbers: batch },
-                    type: sequelize.QueryTypes.SELECT,
-                    options: { timeout: QUERY_TIMEOUT },
-                }
-            );
+            let offset = 0;
+            const LIMIT = 100; // Fetch dividends in smaller chunks to prevent timeouts
+            let hasMore = true;
 
-            dividends = dividends.concat(batchDividends);
+            while (hasMore) {
+                const batchDividends = await sequelize.query(
+                    `
+                    SELECT account_no, date_paid, divwarrant_no warrant_no, total_holding total,
+                    divgross_amt gross_amt, div_netamt net_amt, cslno
+                    FROM T_Divs2
+                    WHERE account_no IN (:accountNumbers) AND date_paid IS NOT NULL
+                    ORDER BY account_no
+                    OFFSET ${offset} ROWS FETCH NEXT ${LIMIT} ROWS ONLY
+                    `,
+                    {
+                        replacements: { accountNumbers: batch },
+                        type: sequelize.QueryTypes.SELECT,
+                        options: { timeout: QUERY_TIMEOUT },
+                    }
+                );
+
+                dividends = dividends.concat(batchDividends);
+                offset += LIMIT;
+                hasMore = batchDividends.length === LIMIT;
+            }
         }
 
         if (dividends.length === 0) {
