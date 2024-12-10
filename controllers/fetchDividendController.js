@@ -3,6 +3,7 @@ const winston = require('winston'); // Import winston for logging
 
 const fetchDividend = async (req, res) => {
     const { register_code, mail, mobile } = req.body;
+    const { page = 1, limit = 50 } = req.query; // Get page and limit from query params
 
     // Validate input
     if (!register_code || (!mail && !mobile)) {
@@ -15,7 +16,7 @@ const fetchDividend = async (req, res) => {
         const trimmedRegCode = register_code.trim();
 
         const QUERY_TIMEOUT = 260000; // 2 minutes
-        const BATCH_SIZE = 50; // Smaller batch size for better performance
+        const BATCH_SIZE = limit; // Use the `limit` for batch size
 
         // Query 1: Fetch shareholder details by register_code and email or mobile
         let shareholderQuery = `
@@ -57,10 +58,10 @@ const fetchDividend = async (req, res) => {
         for (let i = 0; i < accountNumbers.length; i += BATCH_SIZE) {
             const batch = accountNumbers.slice(i, i + BATCH_SIZE);
 
-            let offset = 0;
-            const LIMIT = 100; // Fetch dividends in smaller chunks to prevent timeouts
-            let hasMore = true;
+            let offset = (page - 1) * limit; // Calculate the offset based on the page number
+            const LIMIT = limit; // Use the `limit` value
 
+            let hasMore = true;
             while (hasMore) {
                 const batchDividends = await sequelize.query(
                     `
