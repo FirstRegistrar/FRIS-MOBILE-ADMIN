@@ -1,4 +1,5 @@
-const sequelize = require('../config/db'); // Import the Sequelize instance
+const { QueryTypes } = require('sequelize'); // Import QueryTypes
+const db1 = require('../config/db').db1; // Adjust to match the exported db1
 const winston = require('winston'); // For logging
 const sendEmail = require('../utils/emailSender'); // Assuming you have a utility function for sending emails
 const generateCode = require('../utils/codeGenerator'); // Assuming you have a utility function for generating codes
@@ -14,15 +15,15 @@ const verifyEmail = async (req, res) => {
     try {
         const trimmedMail = mail.trim();
 
-        // Modified query to prioritize accounts with the most complete information
-        const [result] = await sequelize.query(
+        // Query the database
+        const [result] = await db1.query(
             `
             SELECT TOP 1 
                 mobile, 
                 first_nm, 
                 middle_nm, 
                 last_nm
-            FROM T_shold
+            FROM [dbo].[T_shold]
             WHERE email = :mail
             ORDER BY 
                 (CASE 
@@ -33,17 +34,14 @@ const verifyEmail = async (req, res) => {
                 END) DESC
             `,
             {
-                replacements: { mail: trimmedMail }, // Bind the parameter to avoid SQL injection
-                type: sequelize.QueryTypes.SELECT, // Ensure the query returns rows
+                replacements: { mail: trimmedMail }, // Bind parameter to avoid SQL injection
+                type: QueryTypes.SELECT, // Ensure the query returns rows
             }
         );
 
         // Check if a result was returned
         if (result && result.mobile) {
-            const mobile = result.mobile;
-            const first_nm = result.first_nm;
-            const last_nm = result.last_nm;
-            const middle_nm = result.middle_nm;
+            const { mobile, first_nm, middle_nm, last_nm } = result;
             const code = generateCode(); // Generate a verification code
 
             // Send email with the generated code
@@ -55,8 +53,8 @@ const verifyEmail = async (req, res) => {
                     exists: true,
                     mobile,
                     first_nm,
-                    last_nm,
                     middle_nm,
+                    last_nm,
                 });
             } else {
                 return res.status(500).json({ error: 'Failed to send the email. Please try again later.' });
@@ -68,7 +66,7 @@ const verifyEmail = async (req, res) => {
             });
         }
     } catch (error) {
-        // Logging error with Winston
+        // Log the error with Winston
         winston.error(`Error in verifyEmailController for mail: ${mail} - ${error.message}`, {
             stack: error.stack,
             route: 'verifyEmail',

@@ -1,4 +1,5 @@
-const sequelize = require('../config/db'); // Import the Sequelize instance
+const { QueryTypes } = require('sequelize'); // Import QueryTypes
+const db1 = require('../config/db').db1; // Import the Sequelize instance
 const winston = require('winston'); // Import winston for logging
 
 const fetchDividend = async (req, res) => {
@@ -32,13 +33,13 @@ const fetchDividend = async (req, res) => {
             shareholderQuery += ' AND mobile = :mobile';
         }
 
-        const shareholders = await sequelize.query(shareholderQuery, {
+        const shareholders = await db1.query(shareholderQuery, {
             replacements: {
                 register_code: trimmedRegCode,
                 mail: trimmedMail,
                 mobile: trimmedMobile,
             },
-            type: sequelize.QueryTypes.SELECT,
+            type: QueryTypes.SELECT,
             options: { timeout: QUERY_TIMEOUT },
         });
 
@@ -63,7 +64,7 @@ const fetchDividend = async (req, res) => {
 
             let hasMore = true;
             while (hasMore) {
-                const batchDividends = await sequelize.query(
+                const batchDividends = await db1.query(
                     `
                     SELECT account_no, date_paid, divwarrant_no warrant_no, total_holding total,
                     divgross_amt gross_amt, div_netamt net_amt, cslno
@@ -74,7 +75,7 @@ const fetchDividend = async (req, res) => {
                     `,
                     {
                         replacements: { accountNumbers: batch },
-                        type: sequelize.QueryTypes.SELECT,
+                        type: QueryTypes.SELECT,
                         options: { timeout: QUERY_TIMEOUT },
                     }
                 );

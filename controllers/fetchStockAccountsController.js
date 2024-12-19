@@ -1,4 +1,5 @@
-const sequelize = require('../config/db'); // Import the Sequelize instance
+const { QueryTypes } = require('sequelize'); // Import QueryTypes
+const db1 = require('../config/db').db1; // Import the Sequelize instance
 const winston = require('winston'); // Import winston for logging
 
 const fetchStockAccounts = async (req, res) => {
@@ -17,33 +18,33 @@ const fetchStockAccounts = async (req, res) => {
         // Start the base query
         let query = `
             SELECT 
-                Acctno, 
-                last_nm, 
-                first_nm, 
-                middle_nm
-            FROM T_shold
-            WHERE regcode = :register_code
+                [Acctno], 
+                [last_nm], 
+                [first_nm], 
+                [middle_nm]
+            FROM [dbo].[T_shold]
+            WHERE [regcode] = :register_code
         `;
 
         const replacements = { register_code: trimmedRegCode };
 
         // Append conditions based on input availability
         if (trimmedMail && trimmedMobile) {
-            query += ` AND (email = :mail OR mobile = :mobile)`;
+            query += ` AND ([email] = :mail OR [mobile] = :mobile)`;
             replacements.mail = trimmedMail;
             replacements.mobile = trimmedMobile;
         } else if (trimmedMail) {
-            query += ` AND email = :mail`;
+            query += ` AND [email] = :mail`;
             replacements.mail = trimmedMail;
         } else if (trimmedMobile) {
-            query += ` AND mobile = :mobile`;
+            query += ` AND [mobile] = :mobile`;
             replacements.mobile = trimmedMobile;
         }
 
         // Execute the raw query with Sequelize
-        const shareholders = await sequelize.query(query, {
+        const shareholders = await db1.query(query, {
             replacements,
-            type: sequelize.QueryTypes.SELECT,
+            type: QueryTypes.SELECT,
         });
 
         // Check if results are found

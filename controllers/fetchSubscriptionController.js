@@ -1,4 +1,5 @@
-const sequelize = require('../config/db'); // Import the Sequelize instance
+const { QueryTypes } = require('sequelize'); // Import QueryTypes
+const db2 = require('../config/db').db2; // Import the Sequelize instance
 const winston = require('winston'); // Import winston for logging
 
 const fetchSubscription = async (req, res) => {
@@ -45,9 +46,9 @@ const fetchSubscription = async (req, res) => {
         }
 
         // Execute raw query using Sequelize
-        const result = await sequelize.query(query, {
+        const result = await db2.query(query, {
             replacements,
-            type: sequelize.QueryTypes.SELECT,
+            type: QueryTypes.SELECT,
         });
 
         // Log the result to check the output
@@ -63,7 +64,7 @@ const fetchSubscription = async (req, res) => {
         }
     } catch (error) {
         // Enhanced error logging with Winston
-        winston.error(`Error in fetchSubscription for email: ${email}, phone_number: ${phone_number} - ${error.message}`, {
+        winston.error(`Error in fetchSubscription for email: ${email}, phone_number: ${mobile} - ${error.message}`, {
             stack: error.stack,
             route: 'fetchSubscription',
         });

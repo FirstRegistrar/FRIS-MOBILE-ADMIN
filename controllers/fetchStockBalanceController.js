@@ -1,4 +1,5 @@
-const sequelize = require('../config/db'); // Import the Sequelize instance
+const { QueryTypes } = require('sequelize'); // Import QueryTypes
+const db1 = require('../config/db').db1; // Import the Sequelize instance
 const winston = require('winston'); // For logging errors
 
 const fetchStockBalance = async (req, res) => {
@@ -15,22 +16,22 @@ const fetchStockBalance = async (req, res) => {
         const trimmedMail = mail ? mail.trim() : null;
         const trimmedMobile = mobile ? mobile.trim() : null;
 
-        // Query to fetch the total units with cert_status = 1
+        // Query to fetch the total units with certificate_status = 1
         const unitsQuery = `
-            SELECT SUM(no_of_units) AS total_units
-            FROM T_units
-            WHERE account_no = :account_no
-            AND reg_code = :register_code
-            AND certificate_status = 1
+            SELECT SUM([no_of_units]) AS total_units
+            FROM [dbo].[T_units]
+            WHERE [account_no] = :account_no
+            AND [reg_code] = :register_code
+            AND [certificate_status] = 1
         `;
 
         // Execute the query for total units
-        const [unitsResult] = await sequelize.query(unitsQuery, {
+        const [unitsResult] = await db1.query(unitsQuery, {
             replacements: {
                 account_no: trimmedAccountNo,
                 register_code: trimmedRegisterCode,
             },
-            type: sequelize.QueryTypes.SELECT,
+            type: QueryTypes.SELECT,
         });
 
         const total_units = unitsResult.total_units || 0;
@@ -38,15 +39,15 @@ const fetchStockBalance = async (req, res) => {
         // Start the base query for shareholder information
         let shareholderQuery = `
             SELECT 
-                addr1, 
-                addr2, 
-                st, 
-                last_nm, 
-                first_nm, 
-                middle_nm
-            FROM T_shold
-            WHERE Acctno = :account_no
-            AND regcode = :register_code
+                [addr1], 
+                [addr2], 
+                [st], 
+                [last_nm], 
+                [first_nm], 
+                [middle_nm]
+            FROM [dbo].[T_shold]
+            WHERE [Acctno] = :account_no
+            AND [regcode] = :register_code
         `;
 
         const replacements = {
@@ -56,21 +57,21 @@ const fetchStockBalance = async (req, res) => {
 
         // Append conditions for email and/or mobile
         if (trimmedMail && trimmedMobile) {
-            shareholderQuery += ` AND (email = :mail OR mobile = :mobile)`;
+            shareholderQuery += ` AND ([email] = :mail OR [mobile] = :mobile)`;
             replacements.mail = trimmedMail;
             replacements.mobile = trimmedMobile;
         } else if (trimmedMail) {
-            shareholderQuery += ` AND email = :mail`;
+            shareholderQuery += ` AND [email] = :mail`;
             replacements.mail = trimmedMail;
         } else if (trimmedMobile) {
-            shareholderQuery += ` AND mobile = :mobile`;
+            shareholderQuery += ` AND [mobile] = :mobile`;
             replacements.mobile = trimmedMobile;
         }
 
         // Execute the query for shareholder information
-        const [shareholderResult] = await sequelize.query(shareholderQuery, {
+        const [shareholderResult] = await db1.query(shareholderQuery, {
             replacements,
-            type: sequelize.QueryTypes.SELECT,
+            type: QueryTypes.SELECT,
         });
 
         if (!shareholderResult) {
@@ -80,16 +81,20 @@ const fetchStockBalance = async (req, res) => {
         return res.json({ shareholder: shareholderResult, total_units });
     } catch (error) {
         // Enhanced error logging with Winston
-        winston.error(`Error in fetchStockBalanceController for account_no: ${account_no}, register_code: ${register_code}, mail: ${mail}, mobile: ${mobile} - ${error.message}`, {
-            stack: error.stack,
-            route: 'fetchStockBalance',
-        });
+        winston.error(
+            `Error in fetchStockBalanceController for account_no: ${account_no}, register_code: ${register_code}, mail: ${mail}, mobile: ${mobile} - ${error.message}`,
+            {
+                stack: error.stack,
+                route: 'fetchStockBalance',
+            }
+        );
 
         return res.status(500).json({
             error: 'Internal Server Error',
             details: error.message,
-        }); 
+        });
     }
 };
 
 module.exports = fetchStockBalance;
+

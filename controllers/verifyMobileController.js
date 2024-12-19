@@ -1,4 +1,5 @@
-const sequelize = require('../config/db'); // Import the Sequelize instance
+const { QueryTypes } = require('sequelize'); // Import QueryTypes
+const db1 = require('../config/db').db1; // Import the Sequelize instance
 const generateCode = require('../utils/codeGenerator'); // Assuming you have a utility function for generating codes
 const sendSMS = require('../utils/smsSender'); // Assuming you have a utility function for sending SMS
 const winston = require('winston'); // Import winston for logging
@@ -15,14 +16,14 @@ const verifyMobile = async (req, res) => {
         const trimmedMobile = mobile.trim();
 
         // Modified query to prioritize accounts with the most complete information
-        const [result] = await sequelize.query(
+        const [result] = await db1.query(
             `
             SELECT TOP 1 
                 email, 
                 first_nm, 
                 middle_nm, 
                 last_nm
-            FROM T_shold
+            FROM [dbo].[T_shold]
             WHERE mobile = :mobile
             ORDER BY 
                 (CASE 
@@ -34,7 +35,7 @@ const verifyMobile = async (req, res) => {
             `,
             {
                 replacements: { mobile: trimmedMobile }, // Bind the mobile parameter
-                type: sequelize.QueryTypes.SELECT, // Ensure the query returns rows
+                type: QueryTypes.SELECT, // Ensure the query returns rows
             }
         );
 

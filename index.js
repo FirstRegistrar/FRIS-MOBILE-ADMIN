@@ -4,7 +4,8 @@ const bodyParser = require('body-parser');
 const winston = require('winston');
 const winstonRotate = require('winston-daily-rotate-file');
 const cors = require('cors');  // Importing cors
-const sequelize = require('./config/db'); // Import the Sequelize instance
+const { db1, db2 } = require('./config/db');
+
 
 
 
@@ -36,19 +37,23 @@ const logger = winston.createLogger({
     ]
 });
 
-// Test the connection
-sequelize.authenticate()
-    .then(() => console.log('Connection to MSSQL database has been established successfully.'))
-    .catch((error) => {
+// Test connections
+(async () => {
+    try {
+        await db1.authenticate();
+        console.log('Connection to the first database has been established successfully.');
+        
+        await db2.authenticate();
+        console.log('Connection to the second database (fris_mobile_db) has been established successfully.');
+    } catch (error) {
         console.error('Unable to connect to the database:', error);
-    });
-
+    }
+})();
 
 const authenticate = require('./utils/authentication');
 const verifyEmailRoute = require('./routes/verifyEmail');
 const verifyMobileRoute = require('./routes/verifyMobile');
 const fetchAccountsRoute = require('./routes/fetchAccounts');
-const fetchCompanyNameRoute = require('./routes/fetchCompanyName');
 const fetchStockAccountsRoute = require('./routes/fetchStockAccounts');
 const fetchStockBalanceRoute = require('./routes/fetchStockBalance');
 const fetchDividendRoute = require('./routes/fetchDividend');
@@ -74,7 +79,7 @@ app.use((req, res, next) => {
 app.use((req, res, next) => {
     if (!authenticate(req)) {
         logger.warn(`Unauthorized access attempt on ${req.path}`);
-        return res.status(401).json({ error: 'Invalid API Key, Version 1.0.8' });
+        return res.status(401).json({ error: 'Invalid API Key, Version 1.0.9' });
     }
     next();
 });
@@ -83,16 +88,16 @@ app.use((req, res, next) => {
 app.use('/verifyEmail', verifyEmailRoute);
 app.use('/verifyMobile', verifyMobileRoute);
 app.use('/fetchAccounts', fetchAccountsRoute);
-app.use('/fetchCompanyName', fetchCompanyNameRoute);
 app.use('/fetchStockAccounts', fetchStockAccountsRoute);
 app.use('/fetchStockBalance', fetchStockBalanceRoute);
 app.use('/fetchDividend', fetchDividendRoute);
 app.use('/fetchSubscription', fetchSubscriptionRoute);
 app.use('/addSubscription', addSubscriptionRoute);
 
+
 // Default Route
 app.get('/', (req, res) => {
-    res.send('Welcome to the Estock Backend API 1.0.8');
+    res.send('Welcome to the Estock Backend API 1.0.9');
 });
 
 // Error Handling for Undefined Routes

@@ -1,17 +1,32 @@
 const { Sequelize } = require('sequelize');
 
-// MSSQL database configuration
-const sequelize = new Sequelize({
+// First Database
+const db1 = new Sequelize({
     dialect: 'mssql',
-    host: process.env.DB_HOST, // Database host (e.g., localhost or IP)
-    username: process.env.DB_USER, // Your DB username
-    password: process.env.DB_PASS, // Your DB password
-    database: process.env.DB_NAME, // Your DB name
+    host: process.env.DB_HOST,
+    username: process.env.DB_USER,
+    password: process.env.DB_PASS,
+    database: process.env.DB_NAME,
     dialectOptions: {
-        encrypt: false, // Use encryption if required (Azure)
-        requestTimeout: 260000, // 260 seconds
+        encrypt: false,
+        requestTimeout: 260000,
     },
-    logging: false, // Disable logging if not needed
+    logging: false,
 });
 
-module.exports = sequelize;
+// Second Database (fris_mobile_db)
+const db2 = new Sequelize({
+    dialect: 'mssql',
+    host: process.env.DB_HOST,
+    username: process.env.DB2_USER,
+    password: process.env.DB2_PASS,
+    database: process.env.DB2_NAME,
+    dialectOptions: {
+        encrypt: false,
+        requestTimeout: 260000,
+    },
+    logging: false,
+});
+
+module.exports = { db1, db2 };
+
