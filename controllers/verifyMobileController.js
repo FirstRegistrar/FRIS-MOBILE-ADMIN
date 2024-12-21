@@ -36,6 +36,7 @@ const verifyMobile = async (req, res) => {
             {
                 replacements: { mobile: trimmedMobile }, // Bind the mobile parameter
                 type: QueryTypes.SELECT, // Ensure the query returns rows
+                timeout: 260000,
             }
         );
 

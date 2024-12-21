@@ -79,7 +79,7 @@ app.use((req, res, next) => {
 app.use((req, res, next) => {
     if (!authenticate(req)) {
         logger.warn(`Unauthorized access attempt on ${req.path}`);
-        return res.status(401).json({ error: 'Invalid API Key, Version 1.0.9' });
+        return res.status(401).json({ error: 'Invalid API Key, Version 1.1.0' });
     }
     next();
 });
@@ -97,7 +97,7 @@ app.use('/addSubscription', addSubscriptionRoute);
 
 // Default Route
 app.get('/', (req, res) => {
-    res.send('Welcome to the Estock Backend API 1.0.9');
+    res.send('Welcome to the Estock Backend API 1.1.0');
 });
 
 // Error Handling for Undefined Routes

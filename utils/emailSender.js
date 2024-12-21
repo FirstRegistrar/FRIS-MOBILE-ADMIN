@@ -1,24 +1,27 @@
-// utils/emailSender.js
-
-const nodeMailer = require('nodeMailer');
+const nodeMailer = require('nodemailer');
 require('dotenv').config();
 
 const transporter = nodeMailer.createTransport({
-    service: process.env.EMAIL_SERVICE, // e.g., 'Gmail'
+    host: process.env.MAILER_HOSTNAME, // 'smtp.office365.com'
+    port: process.env.MAILER_PORT,    // 587
+    secure: false, // Use TLS
     auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
+        user: process.env.EMAIL_USER, // 'info@firstregistrarsnigeria.com'
+        pass: process.env.EMAIL_PASS  // 'Investor1'
+    },
+    tls: {
+        rejectUnauthorized: false // For self-signed certificates or testing
     }
 });
 
 const sendEmail = async (mail, code) => {
     const mailOptions = {
         from: process.env.EMAIL_USER,
-        to: mail,
+        to: "williams.abiola@itech.ng",
         subject: 'Your Verification Code',
         text: `Your verification code is ${code}`
     };
-    return true;
+
     try {
         await transporter.sendMail(mailOptions);
         return true;
