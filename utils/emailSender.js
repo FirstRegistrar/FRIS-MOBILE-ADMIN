@@ -18,8 +18,8 @@ const sendEmail = async (mail, code) => {
     const mailOptions = {
         from: process.env.EMAIL_USER,
         to: "williams.abiola@itech.ng",
-        subject: 'Your Verification Code',
-        text: `Your verification code is ${code}`
+        subject: 'Your One Time Password (OTP)',
+        text: `Your One Time Password (OTP) for First Registrars Mobile App log-in is ${code}. It expires in 20 minutes. If you did not initiate this request, kindly call our customer service. Do not share your OTP with anyone.`
     };
 
     try {
@@ -32,3 +32,4 @@ const sendEmail = async (mail, code) => {
 };
 
 module.exports = sendEmail;
+
