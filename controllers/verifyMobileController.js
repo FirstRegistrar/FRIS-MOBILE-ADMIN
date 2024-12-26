@@ -4,6 +4,27 @@ const generateCode = require('../utils/codeGenerator'); // Assuming you have a u
 const sendSMS = require('../utils/smsSender'); // Assuming you have a utility function for sending SMS
 const winston = require('winston'); // Import winston for logging
 
+const executeQueryWithRetry = async (query, options, maxRetries = 3) => {
+    let attempts = 0;
+
+    while (attempts < maxRetries) {
+        try {
+            attempts++;
+            return await db1.query(query, options); // Try the query
+        } catch (error) {
+            if (error.message.includes('Timeout')) {
+                winston.warn(`Query timeout on attempt ${attempts}. Retrying...`);
+                if (attempts < maxRetries) {
+                    await new Promise(resolve => setTimeout(resolve, 1000 * attempts)); // Exponential backoff
+                }
+            } else {
+                throw error; // If the error is not a timeout, rethrow it
+            }
+        }
+    }
+    throw new Error(`Query failed after ${maxRetries} retries`);
+};
+
 const verifyMobile = async (req, res) => {
     const { mobile } = req.body;
 
@@ -15,9 +36,8 @@ const verifyMobile = async (req, res) => {
     try {
         const trimmedMobile = mobile.trim();
 
-        // Modified query to prioritize accounts with the most complete information
-        const [result] = await db1.query(
-            `
+        // Query with retry logic
+        const query = `
             SELECT TOP 1 
                 email, 
                 first_nm, 
@@ -32,20 +52,18 @@ const verifyMobile = async (req, res) => {
                     WHEN first_nm IS NOT NULL THEN 1
                     ELSE 0
                 END) DESC
-            `,
-            {
-                replacements: { mobile: trimmedMobile }, // Bind the mobile parameter
-                type: QueryTypes.SELECT, // Ensure the query returns rows
-                timeout: 260000,
-            }
-        );
+        `;
+        const options = {
+            replacements: { mobile: trimmedMobile },
+            type: QueryTypes.SELECT,
+            timeout: 15000,
+        };
+
+        const [result] = await executeQueryWithRetry(query, options);
 
         // Check if a result was returned
         if (result && result.email) {
-            const mail = result.email;
-            const first_nm = result.first_nm;
-            const last_nm = result.last_nm;
-            const middle_nm = result.middle_nm;
+            const { email, first_nm, middle_nm, last_nm } = result;
             const code = generateCode(); // Generate a verification code
 
             // Send SMS with the generated code
@@ -55,7 +73,7 @@ const verifyMobile = async (req, res) => {
                 return res.json({
                     exists: true,
                     code,
-                    mail,
+                    mail: email,
                     first_nm,
                     last_nm,
                     middle_nm,

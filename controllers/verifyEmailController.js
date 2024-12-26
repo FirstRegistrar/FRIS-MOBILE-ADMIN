@@ -36,8 +36,9 @@ const verifyEmail = async (req, res) => {
             {
                 replacements: { mail: trimmedMail }, // Bind parameter to avoid SQL injection
                 type: QueryTypes.SELECT, // Ensure the query returns rows
-                timeout: 260000,
+                timeout: 260000
             }
+        
         );
 
         // Check if a result was returned
