@@ -25,13 +25,7 @@ const verifyEmail = async (req, res) => {
                 last_nm
             FROM [dbo].[T_shold]
             WHERE email = :mail
-            ORDER BY 
-                (CASE 
-                    WHEN first_nm IS NOT NULL AND middle_nm IS NOT NULL AND last_nm IS NOT NULL THEN 3
-                    WHEN first_nm IS NOT NULL AND last_nm IS NOT NULL THEN 2
-                    WHEN first_nm IS NOT NULL THEN 1
-                    ELSE 0
-                END) DESC
+           
             `,
             {
                 replacements: { mail: trimmedMail }, // Bind parameter to avoid SQL injection

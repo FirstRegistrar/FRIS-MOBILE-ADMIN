@@ -1,0 +1,5 @@
+2024-12-31T14:10:10.498Z [INFO]: Server is running on port 3000
+2024-12-31T14:20:19.551Z [INFO]: Server is running on port 3000
+2024-12-31T14:24:42.969Z [INFO]: Received POST request for /verifyEmail
+2024-12-31T14:24:44.297Z [INFO]: Received POST request for /verifyEmail
+2024-12-31T14:27:05.817Z [INFO]: Received POST request for /verifyEmail
