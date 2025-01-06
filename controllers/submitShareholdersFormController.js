@@ -1,19 +1,24 @@
 const nodeMailer = require('nodemailer');
 require('dotenv').config();
 
-// Nodemailer transporter
 const transporter = nodeMailer.createTransport({
-    host: process.env.MAILER_HOSTNAME, // 'smtp.office365.com'
-    port: process.env.MAILER_PORT,    // 587
-    secure: false, // Use TLS
+    host: 'smtp.office365.com',
+    port: 587,
+    secure: false,
     auth: {
-        user: process.env.EMAIL_USER, // 'info@firstregistrarsnigeria.com'
-        pass: process.env.EMAIL_PASS  // 'Investor1'
+        user: 'info@firstregistrarsnigeria.com',
+        pass: 'Investor1'
     },
     tls: {
-        rejectUnauthorized: false // For self-signed certificates or testing
-    }
+        rejectUnauthorized: false
+    },
+    connectionTimeout: 60000, // 60 seconds
+    socketTimeout: 60000,      // 60 seconds
+    logger: true, // Enable debug logging
+    debug: true    // Include connection details
 });
+
+module.exports = transporter;
 
 const submitShareholdersForm = async (req, res) => {
     const {

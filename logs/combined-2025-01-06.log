@@ -4,3 +4,5 @@
 2025-01-06T08:18:30.306Z [INFO]: Received POST request for /verifyEmail
 2025-01-06T08:19:06.752Z [INFO]: Server is running on port 3000
 2025-01-06T08:19:09.844Z [INFO]: Received POST request for /verifyEmail
+2025-01-06T08:22:30.779Z [INFO]: Server is running on port 3000
+2025-01-06T08:22:40.321Z [INFO]: Received POST request for /verifyEmail
