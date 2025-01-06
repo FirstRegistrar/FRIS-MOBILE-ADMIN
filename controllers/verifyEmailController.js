@@ -7,7 +7,6 @@ const generateCode = require('../utils/codeGenerator'); // Assuming you have a u
 const verifyEmail = async (req, res) => {
     const { mail } = req.body;
 
-    // Validate input
     if (!mail || typeof mail !== 'string') {
         return res.status(400).json({ error: 'A valid email address is required' });
     }
@@ -25,25 +24,22 @@ const verifyEmail = async (req, res) => {
                 last_nm
             FROM [dbo].[T_shold]
             WHERE email = :mail
-           
             `,
             {
-                replacements: { mail: trimmedMail }, // Bind parameter to avoid SQL injection
-                type: QueryTypes.SELECT, // Ensure the query returns rows
-                timeout: 260000
+                replacements: { mail: trimmedMail },
+                type: QueryTypes.SELECT,
+                timeout: 260000,
             }
-        
         );
 
-        // Check if a result was returned
         if (result && result.mobile) {
             const { mobile, first_nm, middle_nm, last_nm } = result;
-            const code = generateCode(); // Generate a verification code
+            const code = generateCode(); // Generate verification code
 
-            // Send email with the generated code
-            const mailSent = await sendEmail(trimmedMail, code);
+            // Attempt to send email
+            const emailResult = await sendEmail(trimmedMail, code);
 
-            if (mailSent) {
+            if (emailResult.success) {
                 return res.json({
                     code,
                     exists: true,
@@ -53,7 +49,10 @@ const verifyEmail = async (req, res) => {
                     last_nm,
                 });
             } else {
-                return res.status(500).json({ error: 'Failed to send the email. Please try again later.' });
+                return res.status(500).json({
+                    error: 'Failed to send the email.',
+                    details: emailResult.error, // Include detailed email error
+                });
             }
         } else {
             return res.status(404).json({
@@ -62,15 +61,12 @@ const verifyEmail = async (req, res) => {
             });
         }
     } catch (error) {
-        // Log the error with Winston
-        winston.error(`Error in verifyEmailController for mail: ${mail} - ${error.message}`, {
-            stack: error.stack,
-            route: 'verifyEmail',
-        });
-
         return res.status(500).json({
             error: 'Internal Server Error',
-            details: error.message,
+            details: {
+                message: error.message,
+                stack: error.stack,
+            },
         });
     }
 };

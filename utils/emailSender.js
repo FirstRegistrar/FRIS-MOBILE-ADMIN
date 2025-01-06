@@ -2,34 +2,48 @@ const nodeMailer = require('nodemailer');
 require('dotenv').config();
 
 const transporter = nodeMailer.createTransport({
-    host: 'smtp.office365.com', //process.env.MAILER_HOSTNAME, // 
-    port:     587, // process.env.MAILER_PORT,
-    secure: true, // Use TLS
+    host: 'smtp.office365.com',
+    port: 587,
+    secure: false,
     auth: {
-        user: 'info@firstregistrarsnigeria.com', //process.env.EMAIL_USER, // 
-        pass: 'Investor1' //process.env.EMAIL_PASS  // 
+        user: 'info@firstregistrarsnigeria.com',
+        pass: 'Investor1'
     },
     tls: {
-        rejectUnauthorized: false // For self-signed certificates or testing
-    }
+        rejectUnauthorized: false
+    },
+    connectionTimeout: 60000, // 60 seconds
+    socketTimeout: 60000,      // 60 seconds
+    logger: true, // Enable debug logging
+    debug: true    // Include connection details
 });
+
+module.exports = transporter;
 
 const sendEmail = async (mail, code) => {
     const mailOptions = {
-        from: process.env.EMAIL_USER,
-        to: "williams.abiola@itech.ng",
+        from: 'info@firstregistrarsnigeria.com', // Avoid relying on process.env for now
+        to: mail,
         subject: 'Your One Time Password (OTP)',
-        text: `Your One Time Password (OTP) for First Registrars Mobile App log-in is ${code}. It expires in 20 minutes. If you did not initiate this request, kindly call our customer service. Do not share your OTP with anyone.`
+        text: `Your One Time Password (OTP) for First Registrars Mobile App log-in is ${code}. It expires in 20 minutes. If you did not initiate this request, kindly call our customer service. Do not share your OTP with anyone.`,
     };
 
     try {
         await transporter.sendMail(mailOptions);
-        return true;
+        return { success: true }; // Email sent successfully
     } catch (error) {
-        console.error('Error sending mail:', error);
-        return false;
+        return {
+            success: false,
+            error: {
+                message: error.message,
+                stack: error.stack,
+                code: error.code,
+                response: error.response, // SMTP response
+            },
+        }; // Return detailed error info
     }
 };
+
 
 module.exports = sendEmail;
 
