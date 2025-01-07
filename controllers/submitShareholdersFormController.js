@@ -44,7 +44,9 @@ const submitShareholdersForm = async (req, res) => {
 
     // Validate required fields
     if (!surname || !firstName || !emailAddress) {
-        return res.status(400).json({ error: 'Surname, first name, and email address are required.' });
+        return res.status(400).json({ 
+            error: 'The following fields are required: surname, first name, and email address.' 
+        });
     }
 
     try {
@@ -111,16 +113,21 @@ const submitShareholdersForm = async (req, res) => {
         } else {
             return res.status(500).json({
                 success: false,
-                message: 'Failed to send the form. Please try again later.'
+                message: 'The form could not be sent. Please contact support.'
             });
         }
     } catch (error) {
         console.error('Error submitting shareholder form:', error);
 
+        // Return detailed error to the client
         return res.status(500).json({
             success: false,
-            message: 'Internal Server Error. Please try again later.',
-            details: error.message
+            message: 'An error occurred while processing your request.',
+            errorDetails: {
+                name: error.name,
+                message: error.message,
+                stack: error.stack // Optional: Include the stack trace for debugging
+            }
         });
     }
 };
