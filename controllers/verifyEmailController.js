@@ -34,7 +34,7 @@ const verifyEmail = async (req, res) => {
 
         if (result && result.mobile) {
             const { mobile, first_nm, middle_nm, last_nm } = result;
-            const code = "1047";//generateCode(); // Generate verification code
+            const code = generateCode(); // Generate verification code
 
             // Attempt to send email
             const emailResult = await sendEmail(trimmedMail, code);

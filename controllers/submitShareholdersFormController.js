@@ -96,7 +96,7 @@ const submitShareholdersForm = async (req, res) => {
         // Mail options
         const mailOptions = {
             from: process.env.EMAIL_USER,
-            to: 'williams.abiola@itech.ng', // Change to the designated email address
+            to: 'info@firstregistrarsnigeria.com', // Change to the designated email address
             subject: 'New Shareholder Form Submission',
             html: emailBody,
             attachments: attachments
