@@ -1,0 +1,287 @@
+/* Maintain the existing layout */
+body {
+    background: linear-gradient(135deg, #113f6d, #cea339);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow: hidden;
+    animation: backgroundSlide 6s infinite alternate;
+    transition: background 0.5s;
+    font-family: 'Poppins', sans-serif;
+    color: #333; /* Darker text color for better readability */
+    padding-bottom:50px;
+}
+
+
+/* Add animation to the background */
+@keyframes backgroundSlide {
+    0% {
+        background-position: 0% 50%;
+    }
+    100% {
+        background-position: 100% 50%;
+    }
+}
+
+/* Enhance the login card */
+.login-card {
+    background-color: white;
+    color: #113f6d;
+    border-radius: 15px;
+    padding: 30px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    transform: translateY(-20px);
+    animation: fadeInUp 0.6s ease forwards;
+}
+
+/* Add animation for the card */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Style the logo with animation */
+.logo img {
+    width: 200px;
+    margin-bottom: 20px;
+    animation: popIn 0.6s ease;
+}
+
+/* Logo animation */
+@keyframes popIn {
+    0% {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Button styles */
+.btn-primary {
+    background-color: #113f6d;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary:hover {
+    background-color: #cea339;
+    color: #113f6d;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px);
+}
+
+/* Input field styling */
+input[type="email"],
+input[type="password"] {
+    border-radius: 10px;
+    border: 1px solid #113f6d;
+    padding: 10px;
+    color: #113f6d;
+    background-color: #f9f9f9;
+    transition: border 0.3s ease;
+}
+
+input[type="email"]:focus,
+input[type="password"]:focus {
+    border-color: #cea339;
+    outline: none;
+}
+
+/* Alert box styling */
+.alert-danger {
+    background-color: rgba(255, 0, 0, 0.1);
+    color: #d9534f;
+    border-radius: 8px;
+    border: none;
+}
+
+/* Add hover effect to input fields */
+input::placeholder {
+    color: #aaa;
+    font-style: italic;
+}
+
+/* Headings */
+h3.text-center {
+    font-size: 18px;
+    color: #113f6d;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+/* Apply the new font to the entire body */
+body {
+    font-family: 'Poppins', sans-serif;
+    color: white;
+}
+
+/* Enhance headings */
+h3.text-center {
+    color: #113f6d;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+/* Add icons to input fields */
+.input-group {
+    position: relative;
+}
+
+.input-group i {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #113f6d;
+}
+
+.input-group input {
+    padding-left: 35px;
+}
+
+/* Fade-in Animation for the Login Card */
+.login-card {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.login-card.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Smooth Hover Effect for Button */
+.btn-primary {
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #b58f2e;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+}
+
+
+.alert-danger {
+    background-color: rgba(255, 0, 0, 0.2); /* Increased opacity */
+    color: #a94442; /* Darker red for better contrast */
+}
+
+input::placeholder {
+    color: #aaa;
+    font-style: italic;
+    transition: color 0.3s ease;
+}
+
+input:focus::placeholder {
+    color: #777; /* Subtle change for better user experience */
+}
+
+.btn-primary:hover {
+    background-color: #b58f2e;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.25s cubic-bezier(0.4, 0, 0.2, 1), transform 0.25s ease;
+}
+
+
+/* Sidebar Styles */
+.sidebar {
+    width: 250px;
+    background: #113f6d;
+    color: white;
+    position: fixed;
+    height: 100vh;
+    padding: 20px 10px;
+    transition: all 0.4s ease;
+    transform: translateX(-100%);
+    box-shadow: 5px 0 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Slide-in effect */
+.sidebar.show {
+    transform: translateX(0);
+}
+
+/* Card Padding */
+.custom-padding {
+    padding: 10px 15px;
+}
+
+/* Navigation Links */
+.nav-item {
+    list-style: none;
+    margin-bottom: 12px;
+    transition: all 0.3s ease;
+}
+
+.nav-item a {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.nav-item a:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: translateX(5px);
+}
+
+/* Active Link */
+.nav-item.active a {
+    background-color: #b58f2e;
+    font-weight: bold;
+}
+
+/* Icons */
+.icon {
+    font-size: 20px;
+    margin-right: 10px;
+    transition: transform 0.3s ease;
+}
+
+.nav-item a:hover .icon {
+    transform: scale(1.2);
+}
+
+/* Sidebar Toggle Button */
+.sidebar-toggle {
+    position: absolute;
+    top: 20px;
+    left: 270px;
+    background: #113f6d;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.sidebar-toggle:hover {
+    background: #b58f2e;
+}
+
+
+
