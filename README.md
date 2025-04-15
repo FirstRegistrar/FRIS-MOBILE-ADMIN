@@ -1,68 +1,89 @@
-# CodeIgniter 4 Application Starter
+# FRIS Mobile Admin
 
-## What is CodeIgniter?
+## Overview
+The **FRIS Mobile Admin** is a web-based administrative backend designed for managing users, roles, permissions, and shareholder data associated with the FRIS Mobile application developed for First Registrars and Investor Services Limited. The dashboard is tailored specifically for administrative staff to manage and monitor application activities efficiently.
 
-CodeIgniter is a PHP full-stack web framework that is light, fast, flexible and secure.
-More information can be found at the [official site](https://codeigniter.com).
+## Features
 
-This repository holds a composer-installable app starter.
-It has been built from the
-[development repository](https://github.com/codeigniter4/CodeIgniter4).
+- **User Management**: Create, update, and delete admin users.
+- **Role & Permissions Management**: Assign roles and permissions to control access to different sections of the application.
+- **Shareholder Management**: View detailed shareholder information retrieved securely from the database.
+- **Search & Filtering**: Robust search capability with filters for efficient data management.
+- **Activity Logging**: Comprehensive tracking of user activities for audit purposes.
+- **Secure Authentication**: Role-based authentication ensuring secure access.
 
-More information about the plans for version 4 can be found in [CodeIgniter 4](https://forum.codeigniter.com/forumdisplay.php?fid=28) on the forums.
+## Technology Stack
 
-You can read the [user guide](https://codeigniter.com/user_guide/)
-corresponding to the latest version of the framework.
+- **Backend**: CodeIgniter 4
+- **Frontend**: HTML5, CSS3 (Bootstrap 5), JavaScript
+- **Database**: MySQL, Microsoft SQL Server (MSSQL)
 
-## Installation & updates
+## Installation 
+ 
+### Prerequisites
+- PHP 7.4 or higher
+- MySQL 5.7 or higher
+- MSSQL Database connection
 
-`composer create-project codeigniter4/appstarter` then `composer update` whenever
-there is a new release of the framework.
+### Steps
+1. Clone the repository:
+```bash
+git clone https://github.com/FirstRegistrar/FRIS-MOBILE-ADMIN.git
+```
 
-When updating, check the release notes to see if there are any changes you might need to apply
-to your `app` folder. The affected files can be copied or merged from
-`vendor/codeigniter4/framework/app`.
+2. Navigate to the project directory:
+```bash
+cd FRIS-MOBILE-ADMIN
+```
 
-## Setup
+3. Install dependencies using Composer:
+```bash
+composer install
+```
 
-Copy `env` to `.env` and tailor for your app, specifically the baseURL
-and any database settings.
+4. Set up your environment variables by creating a `.env` file from the provided `.env.example` and update it with your database credentials:
 
-## Important Change with index.php
+```env
+app_baseURL = 'http://localhost'
 
-`index.php` is no longer in the root of the project! It has been moved inside the *public* folder,
-for better security and separation of components.
+# MySQL Database
 
-This means that you should configure your web server to "point" to your project's *public* folder, and
-not to the project root. A better practice would be to configure a virtual host to point there. A poor practice would be to point your web server to the project root and expect to enter *public/...*, as the rest of your logic and the
-framework are exposed.
+ database.default.hostname = localhost
+ database.default.database = frissadmin
+ database.default.username = root
+ database.default.password =
+ database.default.DBDriver = MySQLi
+ database.default.port = 3306
 
-**Please** read the user guide for a better explanation of how CI4 works!
+# MSSQL Database
 
-## Repository Management
+ database.mssql.hostname = 104.211.8.144
+ database.mssql.database = Estock
+ database.mssql.username = fris_mobile
+ database.mssql.password = your_password
+ database.mssql.DBDriver = sqlsrv
+ database.mssql.port = 1433
+```
 
-We use GitHub issues, in our main repository, to track **BUGS** and to track approved **DEVELOPMENT** work packages.
-We use our [forum](http://forum.codeigniter.com) to provide SUPPORT and to discuss
-FEATURE REQUESTS.
+5. Run the development server:
+```bash
+php spark serve
+```
 
-This repository is a "distribution" one, built by our release preparation script.
-Problems with it can be raised on our forum, or as issues in the main repository.
+6. Open your web browser and access the admin dashboard at:
+```
+http://localhost
+```
 
-## Server Requirements
+## Usage
+Log in with the admin credentials created directly in your MySQL database. From there, you can manage users, permissions, and shareholders' data.
 
-PHP version 7.4 or higher is required, with the following extensions installed:
+## Contributing
+Contributions and feature requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
-- [intl](http://php.net/manual/en/intl.requirements.php)
-- [mbstring](http://php.net/manual/en/mbstring.installation.php)
+## License
+[MIT](https://choosealicense.com/licenses/mit/)
 
-> [!WARNING]
-> The end of life date for PHP 7.4 was November 28, 2022.
-> The end of life date for PHP 8.0 was November 26, 2023.
-> If you are still using PHP 7.4 or 8.0, you should upgrade immediately.
-> The end of life date for PHP 8.1 will be November 25, 2024.
+## Support
+If you need assistance, please contact the development team at Inspirive Technologies.
 
-Additionally, make sure that the following extensions are enabled in your PHP:
-
-- json (enabled by default - don't turn it off)
-- [mysqlnd](http://php.net/manual/en/mysqlnd.install.php) if you plan to use MySQL
-- [libcurl](http://php.net/manual/en/curl.requirements.php) if you plan to use the HTTP\CURLRequest library

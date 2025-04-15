@@ -31,6 +31,7 @@ class AuthController extends Controller
             $session->setFlashdata('error', 'Invalid credentials');
             return redirect()->to('/login');
         }
+        
 
         // Check user status
         if ($user['status'] != 'active') {
