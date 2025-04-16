@@ -16,7 +16,7 @@ class App extends BaseConfig
      *
      * E.g., http://example.com/
      */
-    public string $baseURL = 'https://frismobile-admin-g7eygfddbheafwax.eastus-01.azurewebsites.net/';
+    public string $baseURL = 'http://localhost/';
 
     /**
      * Allowed Hostnames in the Site URL other than the hostname in the baseURL.
@@ -157,7 +157,7 @@ class App extends BaseConfig
      * secure, the user will be redirected to a secure version of the page
      * and the HTTP Strict Transport Security (HSTS) header will be set.
      */
-    public bool $forceGlobalSecureRequests = true;
+    public bool $forceGlobalSecureRequests = false;
 
     /**
      * --------------------------------------------------------------------------
