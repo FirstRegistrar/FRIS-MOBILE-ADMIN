@@ -6,7 +6,7 @@
         <h4>Edit Permission</h4>
     </div>
     <div class="card-body">
-        <form action="<?= site_url('permissions/update/' . $permission['id']) ?>" method="post">
+        <form action="<?= site_url('index.php/permissions/update/' . $permission['id']) ?>" method="post">
             <?= csrf_field() ?>
 
             <div class="mb-3">

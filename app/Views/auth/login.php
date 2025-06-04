@@ -10,7 +10,7 @@
             <?= session()->getFlashdata('error'); ?>
         </div>
     <?php endif; ?>
-    <form action="<?= base_url('/authenticate') ?>" method="post">
+    <form action="<?= base_url('/index.php/authenticate') ?>" method="post">
         <?= csrf_field() ?>
         <?php if (session()->getFlashdata('error')): ?>
             <div class="alert alert-danger">

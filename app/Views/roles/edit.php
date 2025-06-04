@@ -16,7 +16,7 @@
                 Update the details of the role below. Make sure all fields are correctly filled before saving changes.
             </p>
 
-            <form action="<?= site_url('roles/update/' . $role['id']) ?>" method="post">
+            <form action="<?= site_url('index.php/roles/update/' . $role['id']) ?>" method="post">
                 <?= csrf_field() ?>
 
                 <div class="mb-3">

@@ -15,7 +15,7 @@
             <p class="text-muted mb-4">
                 Update the details below to edit the user information. If you don't want to change the password, leave the field blank.
             </p>
-            <form action="/users/update/<?= $user['id'] ?>" method="post" class="needs-validation" novalidate>
+            <form action="/index.php/users/update/<?= $user['id'] ?>" method="post" class="needs-validation" novalidate>
             <?= csrf_field() ?>
                 <div class="row">
                     <div class="col-md-6 mb-3">

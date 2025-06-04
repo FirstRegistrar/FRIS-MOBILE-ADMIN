@@ -20,7 +20,7 @@
                     <?= session()->getFlashdata('error') ?>
                 </div>
             <?php endif; ?>
-            <form action="/users/store" method="post" class="needs-validation" novalidate>
+            <form action="/index.php/users/store" method="post" class="needs-validation" novalidate>
                 <?= csrf_field() ?>
                 <div class="row">
                     <div class="col-md-6 mb-3">

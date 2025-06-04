@@ -16,7 +16,7 @@
                 Fill in the form below to create a new role. Ensure all fields are correctly filled before submitting.
             </p>
 
-            <form action="<?= site_url('roles/store') ?>" method="post">
+            <form action="<?= site_url('index.php/roles/store') ?>" method="post">
                 <?= csrf_field() ?>
 
                 <div class="mb-3">

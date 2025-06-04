@@ -6,7 +6,7 @@
         <h4>Create Permission</h4>
     </div>
     <div class="card-body">
-        <form action="<?= site_url('permissions/store') ?>" method="post">
+        <form action="<?= site_url('index.php/permissions/store') ?>" method="post">
             <?= csrf_field() ?>
 
             <div class="mb-3">

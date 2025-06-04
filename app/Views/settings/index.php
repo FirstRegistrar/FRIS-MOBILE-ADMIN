@@ -23,7 +23,7 @@
                 </div>
             <?php endif; ?>
 
-            <form action="/settings/update" method="post">
+            <form action="/index.php/settings/update" method="post">
                 <?= csrf_field() ?>
 
                 <div class="form-check form-switch mb-3">
