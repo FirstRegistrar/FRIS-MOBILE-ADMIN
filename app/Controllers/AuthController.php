@@ -15,41 +15,52 @@ class AuthController extends Controller
     public function authenticate()
     {
         $session = session();
-        $usersModel = new UsersModel();
         $email = $this->request->getVar('email');
         $password = $this->request->getVar('password');
-        
-        // Check if users exist in the database
-        $user = $usersModel->where('email', $email)->first();
-        if (!$user) {
-            $session->setFlashdata('error', 'No user found. Please contact the administrator.');
+
+        try {
+            $usersModel = new \App\Models\UsersModel();
+
+            // This line will trigger DB connection
+            $user = $usersModel->where('email', $email)->first();
+
+            // Validate user
+            if (!$user) {
+                $session->setFlashdata('error', 'No user found. Please contact the administrator.');
+                return redirect()->to(site_url('login'));
+            }
+
+            if (!password_verify($password, $user['password'])) {
+                $session->setFlashdata('error', 'Invalid credentials');
+                return redirect()->to(site_url('login'));
+            }
+
+            if ($user['status'] != 'active') {
+                $session->setFlashdata('error', 'Account is inactive.');
+                return redirect()->to(site_url('login'));
+            }
+
+            // Set session
+            $session->set([
+                'user_id'    => $user['id'],
+                'fullname'   => $user['fullname'],
+                'email'      => $user['email'],
+                'role_id'    => $user['role_id'],
+                'isLoggedIn' => true,
+            ]);
+
+            return redirect()->to(site_url('dashboard'));
+        } catch (\CodeIgniter\Database\Exceptions\DatabaseException $e) {
+            log_message('critical', 'DB Connection Error: ' . $e->getMessage());
+            $session->setFlashdata('error', 'Database error occurred. Please try again later.');
+            return redirect()->to(site_url('login'));
+        } catch (\Throwable $e) {
+            log_message('error', 'Unexpected Error: ' . $e->getMessage());
+            $session->setFlashdata('error', 'An unexpected error occurred. Please try again.');
             return redirect()->to(site_url('login'));
         }
-
-        // Verify password
-        if (!password_verify($password, $user['password'])) {
-            $session->setFlashdata('error', 'Invalid credentials');
-            return redirect()->to(site_url('login'));
-        }
-
-        // Check user status
-        if ($user['status'] != 'active') {
-            $session->setFlashdata('error', 'Account is inactive. Please contact the administrator.');
-            return redirect()->to(site_url('login'));
-        }
-
-        // Set session data
-        $sessionData = [
-            'user_id'    => $user['id'],
-            'fullname'   => $user['fullname'],
-            'email'      => $user['email'],
-            'role_id'    => $user['role_id'],
-            'isLoggedIn' => true,
-        ];
-        $session->set($sessionData);
-
-        return redirect()->to(site_url('dashboard'));
     }
+
 
     public function logout()
     {
