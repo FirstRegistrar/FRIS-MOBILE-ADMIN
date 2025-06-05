@@ -14,42 +14,8 @@ class AuthController extends Controller
 
     public function authenticate()
     {
-        $session = session();
-        $usersModel = new UsersModel();
-        $email = $this->request->getVar('email');
-        $password = $this->request->getVar('password');
-        
-        // Check if users exist in the database
-        $user = $usersModel->where('email', $email)->first();
-        if (!$user) {
-            $session->setFlashdata('error', 'No user found. Please contact the administrator.');
-            return redirect()->to('/login');
-        }
-
-        // Verify password
-        if (!password_verify($password, $user['password'])) {
-            $session->setFlashdata('error', 'Invalid credentials');
-            return redirect()->to('/login');
-        }
-        
-
-        // Check user status
-        if ($user['status'] != 'active') {
-            $session->setFlashdata('error', 'Account is inactive. Please contact the administrator.');
-            return redirect()->to('/login');
-        }
-
-        // Set session data
-        $sessionData = [
-            'user_id'   => $user['id'],
-            'fullname'  => $user['fullname'],
-            'email'     => $user['email'],
-            'role_id'   => $user['role_id'],
-            'isLoggedIn' => true,
-        ];
-        $session->set($sessionData);
-
-        return redirect()->to('/dashboard');
+        file_put_contents(WRITEPATH . 'logs/auth-debug.log', "HIT: " . json_encode($_POST));
+        die('AUTH METHOD REACHED');
     }
 
     public function logout()
