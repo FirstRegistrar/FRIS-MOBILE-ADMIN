@@ -47,7 +47,7 @@
 
     <div class="row mt-5 text-center">
         <div class="col-md-4 mb-4">
-            <a href="/shareholders" class="text-decoration-none text-dark">
+            <a href="<?= base_url('/index.php/shareholders') ?>" class="text-decoration-none text-dark">
                 <div class="card shadow-sm h-100 border-0 hover-card">
                     <div class="card-body">
                         <i class="fas fa-user-circle fa-3x mb-3 text-primary"></i>
@@ -58,7 +58,7 @@
             </a>
         </div>
         <div class="col-md-4 mb-4">
-            <a href="/users" class="text-decoration-none text-dark">
+            <a href="<?= base_url('/index.php/users') ?>" class="text-decoration-none text-dark">
                 <div class="card shadow-sm h-100 border-0 hover-card">
                     <div class="card-body">
                         <i class="fas fa-users-cog fa-3x mb-3 text-success"></i>
@@ -69,7 +69,7 @@
             </a>
         </div>
         <div class="col-md-4 mb-4"> 
-            <a href="/reports" class="text-decoration-none text-dark">
+            <a href="<?= base_url('/index.php/reports') ?>" class="text-decoration-none text-dark">
                 <div class="card shadow-sm h-100 border-0 hover-card">
                     <div class="card-body">
                         <i class="fas fa-chart-line fa-3x mb-3 text-primary"></i>
