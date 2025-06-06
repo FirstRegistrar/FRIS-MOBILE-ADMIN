@@ -10,7 +10,7 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="<?= base_url('/index.php/profile') ?>">
+                    <a class="nav-link" href="<?= base_url('/index.php/profile/edit') ?>">
                         <i class="fas fa-user-circle"></i> Profile
                     </a>
                 </li>
