@@ -81,8 +81,8 @@ class Database extends Config
     public $mssql = [
         'DSN'      => '',
         'hostname' => '104.211.8.144',
-        'username' => 'fris_mobile',
-        'password' => '12oGruSUj0FMvt4G',
+        'username' => 'fris_mobile_db',
+        'password' => 'mOy2vG*71X!_x#',
         'database' => 'Estock',
         'DBDriver' => 'sqlsrv',
         'DBPrefix' => '',

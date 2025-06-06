@@ -7,7 +7,7 @@
             <h5 class="mb-0">
                 <i class="fas fa-edit" style="color: #113f6d;"></i> Edit Role
             </h5>
-            <a href="<?= site_url('roles') ?>" class="btn custom-btn-secondary">
+            <a href="<?= base_url('index.php/roles') ?>" class="btn custom-btn-secondary">
                 <i class="fas fa-arrow-left"></i> Back
             </a>
         </div>
@@ -16,7 +16,7 @@
                 Update the details of the role below. Make sure all fields are correctly filled before saving changes.
             </p>
 
-            <form action="<?= site_url('index.php/roles/update/' . $role['id']) ?>" method="post">
+            <form action="<?= base_url('index.php/roles/update/' . $role['id']) ?>" method="post">
                 <?= csrf_field() ?>
 
                 <div class="mb-3">
@@ -34,7 +34,7 @@
                 <button type="submit" class="btn custom-btn">
                     <i class="fas fa-save"></i> Update Role
                 </button>
-                <a href="<?= site_url('roles') ?>" class="btn custom-btn-secondary">
+                <a href="<?= base_url('index.php/roles') ?>" class="btn custom-btn-secondary">
                     <i class="fas fa-times"></i> Cancel
                 </a>
             </form>

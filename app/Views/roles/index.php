@@ -6,10 +6,10 @@
         <div class="card-header bg-white text-black d-flex justify-content-between align-items-center">
             <h5 class="mb-0"><i class="fas fa-user-shield" style="color: #113f6d;"></i> Roles Management</h5>
             <div>
-                <a href="<?= site_url('roles/create') ?>" class="btn custom-btn">
+                <a href="<?= base_url('index.php/roles/create') ?>" class="btn custom-btn">
                     <i class="fas fa-plus text-light"></i> Add New Role
                 </a>
-                <a href="<?= site_url('dashboard') ?>" class="btn custom-btn">
+                <a href="<?= base_url('index.php/dashboard') ?>" class="btn custom-btn">
                     <i class="fas fa-arrow-left text-light"></i> Back
                 </a>
             </div>
@@ -46,10 +46,10 @@
                                 <td><?= esc($role['name']) ?></td>
                                 <td><?= esc($role['description']) ?></td>
                                 <td>
-                                    <a href="<?= site_url('roles/edit/'.$role['id']) ?>" class="btn btn-warning btn-sm mx-1 text-dark">
+                                    <a href="<?= base_url('index.php/roles/edit/'.$role['id']) ?>" class="btn btn-warning btn-sm mx-1 text-dark">
                                         <i class="fas fa-edit text-dark"></i>
                                     </a>
-                                    <a href="<?= site_url('roles/delete/'.$role['id']) ?>" class="btn btn-danger btn-sm mx-1 text-light" onclick="return confirm('Are you sure you want to delete this role?');">
+                                    <a href="<?= base_url('index.php/roles/delete/'.$role['id']) ?>" class="btn btn-danger btn-sm mx-1 text-light" onclick="return confirm('Are you sure you want to delete this role?');">
                                         <i class="fas fa-trash-alt text-light"></i>
                                     </a>
                                 </td>

@@ -6,7 +6,7 @@
         <div class="card-header bg-white text-black d-flex justify-content-between align-items-center">
             <h5 class="mb-0"><i class="fas fa-users text-dark"></i> Shareholder Details</h5>
             <div>
-                <a href="<?= base_url('shareholders') ?>" class="btn custom-btn ms-2">
+                <a href="<?= base_url('index.php/shareholders') ?>" class="btn custom-btn ms-2">
                     <i class="fas fa-arrow-left text-light"></i> Back
                 </a>
             </div>

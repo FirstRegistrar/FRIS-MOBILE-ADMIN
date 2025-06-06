@@ -6,7 +6,7 @@
         <h4>Create Permission</h4>
     </div>
     <div class="card-body">
-        <form action="<?= site_url('index.php/permissions/store') ?>" method="post">
+        <form action="<?= base_url('index.php/permissions/store') ?>" method="post">
             <?= csrf_field() ?>
 
             <div class="mb-3">
@@ -15,7 +15,7 @@
             </div>
 
             <button type="submit" class="btn btn-success">Create Permission</button>
-            <a href="<?= site_url('permissions') ?>" class="btn btn-secondary">Cancel</a>
+            <a href="<?= base_url('index.php/permissions') ?>" class="btn btn-secondary">Cancel</a>
         </form>
     </div>
 </div>
