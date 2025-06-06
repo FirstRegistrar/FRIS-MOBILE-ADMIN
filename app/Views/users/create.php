@@ -6,7 +6,7 @@
         <div class="card-header bg-white text-black d-flex justify-content-between align-items-center">
             <h5 class="mb-0"><i class="fas fa-user-plus text-dark"></i> Create New User</h5>
             <div>
-                <a href="/users" class="btn custom-btn">
+                <a href="<?= base_url('/index.php/users') ?>" class="btn custom-btn">
                     <i class="fas fa-arrow-left text-light"></i> Back
                 </a>
             </div>
@@ -20,7 +20,7 @@
                     <?= session()->getFlashdata('error') ?>
                 </div>
             <?php endif; ?>
-            <form action="/index.php/users/store" method="post" class="needs-validation" novalidate>
+            <form action="<?= base_url('/index.php/users/store') ?>" method="post" class="needs-validation" novalidate>
                 <?= csrf_field() ?>
                 <div class="row">
                     <div class="col-md-6 mb-3">
@@ -67,7 +67,7 @@
                     <button type="submit" class="btn custom-btn px-4">
                         <i class="fas fa-save text-light"></i> Create User
                     </button>
-                    <a href="/users" class="btn custom-btn-secondary px-4 ms-2">
+                    <a href="<?= base_url('/index.php/users') ?>" class="btn custom-btn-secondary px-4 ms-2">
                         <i class="fas fa-times text-light"></i> Cancel
                     </a>
                 </div>

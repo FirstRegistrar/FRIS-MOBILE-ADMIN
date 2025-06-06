@@ -12,7 +12,7 @@
                 <div class="card-body">
                     <i class="fas fa-users fa-3x mb-3 text-white"></i>
                     <h5 class="card-title">Total Users</h5>
-                    <p class="card-text">1,123,570</p>
+                    <p class="card-text">1,175,801</p>
                 </div>
             </div>
         </div>

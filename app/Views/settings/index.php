@@ -7,7 +7,7 @@
             <h5 class="mb-0">
                 <i class="fas fa-cog" style="color: #113f6d;"></i> Settings
             </h5>
-            <a href="/dashboard" class="btn custom-btn-secondary">
+            <a href="<?= base_url('/index.php/dashboard') ?>" class="btn custom-btn-secondary">
                 <i class="fas fa-arrow-left"></i> Back
             </a>
         </div>
@@ -45,7 +45,7 @@
                 <button type="submit" class="btn custom-btn">
                     <i class="fas fa-save"></i> Save Settings
                 </button>
-                <a href="/dashboard" class="btn custom-btn-secondary">
+                <a href="<?= base_url('/index.php/dashboard') ?>" class="btn custom-btn-secondary">
                     <i class="fas fa-times"></i> Cancel
                 </a>
             </form>

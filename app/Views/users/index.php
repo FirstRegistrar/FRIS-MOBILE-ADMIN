@@ -6,10 +6,10 @@
 <div class="card-header bg-white text-black d-flex justify-content-between align-items-center">
     <h5 class="mb-0"><i class="fas fa-users text-dark"></i> Admin Users</h5>
     <div>
-        <a href="/users/create" class="btn custom-btn">
+        <a href="<?= base_url('/index.php/users/create') ?>" class="btn custom-btn">
             <i class="fas fa-user-plus text-light"></i> <span>Create New User</span>
         </a>
-        <a href="/dashboard" class="btn custom-btn ms-2">
+        <a href="<?= base_url('/index.php/dashboard') ?>" class="btn custom-btn ms-2">
             <i class="fas fa-arrow-left text-light"></i> Back
         </a>
     </div>
@@ -84,10 +84,10 @@
                         </span>
                     </td>
                     <td class="text-center">
-                        <a href="/users/edit/<?= $user['id'] ?>" class="btn btn-outline-warning btn-sm mx-1" title="Edit">
+                        <a href="<?= base_url('/index.php/users/edit/'.$user['id']) ?>" class="btn btn-outline-warning btn-sm mx-1" title="Edit">
                             <i class="fas fa-edit"></i>
                         </a>
-                        <a href="/users/delete/<?= $user['id'] ?>" class="btn btn-outline-danger btn-sm mx-1" title="Delete" onclick="return confirm('Are you sure?')">
+                        <a href="<?= base_url('/index.php/users/delete/'.$user['id']) ?>" class="btn btn-outline-danger btn-sm mx-1" title="Delete" onclick="return confirm('Are you sure?')">
                             <i class="fas fa-trash-alt"></i>
                         </a>
                     </td>
