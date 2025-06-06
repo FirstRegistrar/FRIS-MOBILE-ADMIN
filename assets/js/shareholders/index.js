@@ -4,7 +4,7 @@ $(document).ready(function () {
         let email = $("#emailSearch").val();
 
         $.ajax({
-            url: baseUrl + "/shareholders/data",
+            url: baseUrl + "index.php/shareholders/data",
             type: "GET",
             data: { page: page, name: name, email: email },
             dataType: "json",
