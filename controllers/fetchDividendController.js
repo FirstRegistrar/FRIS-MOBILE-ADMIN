@@ -66,7 +66,7 @@ const fetchDividend = async (req, res) => {
             while (hasMore) {
                 const batchDividends = await db1.query(
                     `
-                    SELECT account_no, date_paid, divwarrant_no warrant_no, total_holding total,
+                    SELECT account_no, date_paid, divwarrant_no warrant_no, dividend_type, total_holding total,
                     divgross_amt gross_amt, div_netamt net_amt, cslno
                     FROM T_Divs2
                     WHERE account_no IN (:accountNumbers) AND date_paid IS NOT NULL
@@ -101,6 +101,7 @@ const fetchDividend = async (req, res) => {
                 mail: shareholder.email,
                 mobile: shareholder.mobile,
                 account_no: shareholder.account_no,
+                dividend_type: dividend.dividend_type,
                 csl_no: dividend.cslno,
                 div_net_amt: dividend.net_amt,
                 div_gross_amt: dividend.gross_amt,
