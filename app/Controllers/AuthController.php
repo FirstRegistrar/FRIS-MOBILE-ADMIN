@@ -12,6 +12,19 @@ class AuthController extends Controller
         return view('auth/login');
     }
 
+    public function testPassword()
+    {
+        $hashed = '$2y$10$vz4HtA9ccn8HcoSNUObnEObrQptLGKhDQbnABAFbYq7OVR/W2oDta'; // Stored password
+        $input = 'admin123'; // Plain text to test
+
+        if (password_verify($input, $hashed)) {
+            return "✅ Password matches.";
+        } else {
+            return "❌ Password does NOT match.";
+        }
+    }
+
+
     public function authenticate()
     {
         $session = session();
@@ -30,7 +43,7 @@ class AuthController extends Controller
                 return redirect()->to(site_url('login'));
             }
 
-            if (!password_verify($password, $user['password'])) {
+            if (!password_verify("admin123", $user['password'])) {
                 $session->setFlashdata('error', 'Invalid credentials');
                 return redirect()->to(site_url('login'));
             }

@@ -8,6 +8,7 @@ use CodeIgniter\Router\RouteCollection;
 
 // Default Route 
 $routes->get('/', 'AuthController::login');
+$routes->get('/test-password', 'AuthController::testPassword');
 
 // Auth Routes
 $routes->get('/login', 'AuthController::login');
