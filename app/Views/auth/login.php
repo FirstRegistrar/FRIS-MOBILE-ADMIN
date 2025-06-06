@@ -5,11 +5,7 @@
         <img src="<?= base_url('assets/images/fris_logo.png') ?>" alt="FRISMobile Logo">
     </div>
     <h3 class="text-center">FRISMOBILE Admin Login</h3>
-    <?php if (session()->getFlashdata('error')): ?>
-        <div class="alert alert-danger">
-            <?= session()->getFlashdata('error'); ?>
-        </div>
-    <?php endif; ?>
+    <p class="text-center">Please enter your credentials to access the admin panel.</p>
     <form action="<?= base_url('/index.php/authenticate') ?>" method="post">
         <?= csrf_field() ?>
         <?php if (session()->getFlashdata('error')): ?>
