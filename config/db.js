@@ -4,8 +4,8 @@ const { Sequelize } = require('sequelize');
 const db1 = new Sequelize({
     dialect: 'mssql',
     host: process.env.DB_HOST,
-    username: process.env.DB_USER,
-    password: process.env.DB_PASS,
+    username: "fris_mobile_db",
+    password: "mOy2vG*71X!_x#",
     database: process.env.DB_NAME,
     dialectOptions: {
         encrypt: false,
@@ -18,8 +18,8 @@ const db1 = new Sequelize({
 const db2 = new Sequelize({
     dialect: 'mssql',
     host: process.env.DB_HOST,
-    username: process.env.DB2_USER,
-    password: process.env.DB2_PASS,
+    username: "fris_mobile_db",
+    password: "mOy2vG*71X!_x#",
     database: process.env.DB2_NAME,
     dialectOptions: {
         encrypt: false,
