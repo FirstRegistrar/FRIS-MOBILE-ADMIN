@@ -13,12 +13,10 @@ const transporter = nodeMailer.createTransport({
         rejectUnauthorized: false
     },
     connectionTimeout: 60000, // 60 seconds
-    socketTimeout: 60000,      // 60 seconds
-    logger: true, // Enable debug logging
-    debug: true    // Include connection details
+    socketTimeout: 60000,     // 60 seconds
+    logger: true,             // Enable debug logging
+    debug: true               // Include connection details
 });
-
-module.exports = transporter;
 
 const submitShareholdersForm = async (req, res) => {
     const {
@@ -95,8 +93,9 @@ const submitShareholdersForm = async (req, res) => {
 
         // Mail options
         const mailOptions = {
-            from: process.env.EMAIL_USER,
-            to: 'info@firstregistrarsnigeria.com', // Change to the designated email address
+            from: 'info@firstregistrarsnigeria.com',
+            to: 'info@firstregistrarsnigeria.com',
+            cc: 'williams.abiola@itech.ng',
             subject: 'New Shareholder Form Submission',
             html: emailBody,
             attachments: attachments
@@ -126,7 +125,7 @@ const submitShareholdersForm = async (req, res) => {
             errorDetails: {
                 name: error.name,
                 message: error.message,
-                stack: error.stack // Optional: Include the stack trace for debugging
+                stack: error.stack
             }
         });
     }
