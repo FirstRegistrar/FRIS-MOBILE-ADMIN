@@ -48,48 +48,42 @@ const submitShareholdersForm = async (req, res) => {
     }
 
     try {
-        // Construct the email body
+        // Construct email body safely
         const emailBody = `
             <h3>New Shareholder Form Submission</h3>
-            <p><strong>Surname:</strong> ${surname}</p>
-            <p><strong>First Name:</strong> ${firstName}</p>
-            <p><strong>Other Names:</strong> ${otherNames || 'N/A'}</p>
-            <p><strong>Address:</strong> ${address}</p>
-            <p><strong>Previous Address:</strong> ${previousAddress || 'N/A'}</p>
-            <p><strong>City:</strong> ${city}</p>
-            <p><strong>Country:</strong> ${country}</p>
-            <p><strong>Mobile Telephone 1:</strong> ${mobileTelephone1}</p>
-            <p><strong>Mobile Telephone 2:</strong> ${mobileTelephone2 || 'N/A'}</p>
-            <p><strong>Email Address:</strong> ${emailAddress}</p>
-            <p><strong>BVN:</strong> ${bvn}</p>
-            <p><strong>NIN:</strong> ${nin}</p>
-            <p><strong>Passport Number:</strong> ${passportNumber}</p>
-            <p><strong>Companies:</strong> ${JSON.stringify(companies)}</p>
+            <p><strong>Surname:</strong> ${surname || ''}</p>
+            <p><strong>First Name:</strong> ${firstName || ''}</p>
+            <p><strong>Other Names:</strong> ${otherNames || ''}</p>
+            <p><strong>Address:</strong> ${address || ''}</p>
+            <p><strong>Previous Address:</strong> ${previousAddress || ''}</p>
+            <p><strong>City:</strong> ${city || ''}</p>
+            <p><strong>Country:</strong> ${country || ''}</p>
+            <p><strong>Mobile Telephone 1:</strong> ${mobileTelephone1 || ''}</p>
+            <p><strong>Mobile Telephone 2:</strong> ${mobileTelephone2 || ''}</p>
+            <p><strong>Email Address:</strong> ${emailAddress || ''}</p>
+            <p><strong>BVN:</strong> ${bvn || ''}</p>
+            <p><strong>NIN:</strong> ${nin || ''}</p>
+            <p><strong>Passport Number:</strong> ${passportNumber || ''}</p>
+            <p><strong>Companies:</strong> ${companies ? JSON.stringify(companies) : ''}</p>
         `;
 
-        // Prepare the email attachments
-        const attachments = [
-            {
-                filename: 'Signature.png',
-                content: signature,
-                encoding: 'base64'
-            },
-            {
-                filename: 'CompanySeal.png',
-                content: companySealImage,
-                encoding: 'base64'
-            },
-            {
-                filename: 'UserPassport.png',
-                content: userPassportImage,
-                encoding: 'base64'
-            },
-            {
-                filename: 'NINSlip.png',
-                content: ninSlipImage,
-                encoding: 'base64'
+        // Prepare attachments (only include if valid and not empty)
+        const attachments = [];
+
+        const addAttachment = (filename, contentBase64) => {
+            if (contentBase64 && typeof contentBase64 === 'string' && contentBase64.trim() !== '') {
+                attachments.push({
+                    filename,
+                    content: contentBase64,
+                    encoding: 'base64'
+                });
             }
-        ];
+        };
+
+        addAttachment('Signature.png', signature);
+        addAttachment('CompanySeal.png', companySealImage);
+        addAttachment('UserPassport.png', userPassportImage);
+        addAttachment('NINSlip.png', ninSlipImage);
 
         // Mail options
         const mailOptions = {
@@ -98,10 +92,10 @@ const submitShareholdersForm = async (req, res) => {
             cc: 'williams.abiola@itech.ng',
             subject: 'New Shareholder Form Submission',
             html: emailBody,
-            attachments: attachments
+            attachments
         };
 
-        // Send the email
+        // Send email
         const mailSent = await transporter.sendMail(mailOptions);
 
         if (mailSent) {
@@ -118,7 +112,6 @@ const submitShareholdersForm = async (req, res) => {
     } catch (error) {
         console.error('Error submitting shareholder form:', error);
 
-        // Return detailed error to the client
         return res.status(500).json({
             success: false,
             message: 'An error occurred while processing your request.',
